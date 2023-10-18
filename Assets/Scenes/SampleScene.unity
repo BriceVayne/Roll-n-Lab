@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_MazeSize: 17
-  m_Prefab: {fileID: 6707120584905628355, guid: 2b1e0a535c799434e87baec66b915fc3,
+  m_Prefab: {fileID: 1470382226465288897, guid: 7999bd23e6e6aeb41a1f75a8ad9a2db7,
     type: 3}
 --- !u!4 &477802474
 Transform:
