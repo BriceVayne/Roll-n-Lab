@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -87,5 +88,55 @@ public class GridGenerator : MonoBehaviour
                 m_Cells[x, y].UpdateName();
             }
         }
+    }
+
+    private IEnumerator ResolvedMaze()
+    {
+        /// Take a % of walls
+        float percentage = 0.5f;
+        int randomWalls = (int)Mathf.Abs(m_Walls.Count * percentage);
+
+        for (int i = 0; i < randomWalls; i++)
+        {
+            Cell c = m_Walls[Random.Range(0, m_Walls.Count)];
+        }
+
+
+        //int x = Random.Range(1, (m_MazeSize - 2) + 1);
+        //int y;
+
+        //if (x % 2 == 0)
+        //    y = Random.Range(1, ((m_MazeSize - 1) / 2) * 2 + 1);
+        //else
+        //    y = Random.Range(2, ((m_MazeSize - 2) / 2) * 2 + 2);
+
+        //Cell c1, c2;
+
+        //if (m_Cells[x, y].Value == -1)
+        //{
+        //    c1 = m_Cells[x, y - 1];
+        //    c2 = m_Cells[x, y + 1];
+        //}
+        //else
+        //{
+        //    c1 = m_Cells[x - 1, y];
+        //    c2 = m_Cells[x + 1, y];
+        //}
+
+        //if (c1.Value != c2.Value)
+        //{
+        //    m_Cells[x, y].Value = 0;
+
+        //    for (int i = 1; i < m_MazeSize - 1; i += 2)
+        //    {
+        //        for (int j = 1; j < m_MazeSize - 1; j += 2)
+        //        {
+        //            if (m_Cells[x, y].Value == c2.Value)
+        //                m_Cells[x, y].Value = c1.Value;
+        //        }
+        //    }
+        //}
+
+        yield return new WaitForSeconds(2f);
     }
 }
