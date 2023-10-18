@@ -3,11 +3,13 @@ using UnityEngine;
 
 public class GridGenerator : MonoBehaviour
 {
+    public int Size { get { return m_MazeSize; } }
+
     [SerializeField] private int m_MazeSize = 32;
     [SerializeField] private Cell m_Prefab;
 
-    Cell[,] m_Cells;
-    List<Cell> m_Walls;
+    private Cell[,] m_Cells;
+    private List<Cell> m_Walls;
 
     private void Start()
     {
@@ -82,6 +84,7 @@ public class GridGenerator : MonoBehaviour
             for (int y = 0; y < m_MazeSize; y++)
             {
                 m_Cells[x, y].UpdateData();
+                m_Cells[x, y].UpdateName();
             }
         }
     }

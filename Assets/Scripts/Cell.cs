@@ -41,8 +41,9 @@ public class Cell : MonoBehaviour
     public void InitializeData(CellModel cellModel)
     {
         model = cellModel;
-
+        
         UpdateData();
+        UpdateName();
     }
 
     public void UpdateData()
@@ -50,6 +51,12 @@ public class Cell : MonoBehaviour
         transform.position = model.Position;
         m_Display.text = model.Value.ToString();
         m_Sprite.color = model.Color;
+    }
+
+    public void UpdateName()
+    {
+        string prefix = model.Value == -2 ? "Border" : model.Value == -1 ? "Wall" : "Cell";
+        name = prefix + $" [{model.Position.x},{model.Position.y}]";
     }
 
     public int Value { get { return model.Value; } set { model.Value = value; } }
