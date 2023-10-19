@@ -5,7 +5,7 @@ public class CellModel
 {
     public int Value { get; set; }
     public Color Color { get; set; }
-    public Vector2 Position { get; set; }
+    public Vector2Int Position { get; set; }
 
     public CellModel(int value)
     {
@@ -18,7 +18,7 @@ public class CellModel
         Color = color;
     }
 
-    public CellModel(int value, Color color, Vector2 position)
+    public CellModel(int value, Color color, Vector2Int position)
     {
         Value = value;
         Color = color;
@@ -48,9 +48,15 @@ public class Cell : MonoBehaviour
 
     public void UpdateData()
     {
-        transform.position = model.Position;
+        transform.position = new Vector2(model.Position.x, model.Position.y);
         m_Display.text = model.Value.ToString();
         m_Sprite.color = model.Color;
+    }
+
+    public void UpdateData(Cell cell)
+    {
+        m_Display.text = cell.model.Value.ToString();
+        m_Sprite.color = cell.model.Color;
     }
 
     public void UpdateName()
@@ -61,5 +67,6 @@ public class Cell : MonoBehaviour
 
     public int Value { get { return model.Value; } set { model.Value = value; } }
     public Color Color { get { return model.Color; } set { model.Color = value; } }
+    public Vector2Int Position { get { return model.Position; } set { model.Position = value; } }
 
 }

@@ -17,6 +17,8 @@ public class GridGenerator : MonoBehaviour
         GenerateGrid();
         PlaceStartAndEnd();
         UpdateMaze();
+
+        StartCoroutine(ResolvedMaze());
     }
 
     private void GenerateGrid()
@@ -47,7 +49,7 @@ public class GridGenerator : MonoBehaviour
                     color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f, 1f, 1f);
 
                 /// Create cell and initialize it
-                CellModel model = new CellModel(value, color, new Vector2(x, y));
+                CellModel model = new CellModel(value, color, new Vector2Int(x, y));
                 m_Cells[x, y] = Instantiate(m_Prefab, transform);
                 m_Cells[x, y].InitializeData(model);
 
@@ -92,51 +94,33 @@ public class GridGenerator : MonoBehaviour
 
     private IEnumerator ResolvedMaze()
     {
-        /// Take a % of walls
-        float percentage = 0.5f;
-        int randomWalls = (int)Mathf.Abs(m_Walls.Count * percentage);
-
-        for (int i = 0; i < randomWalls; i++)
+        for (int i = 0; i < m_Walls.Count; i++)
         {
             Cell c = m_Walls[Random.Range(0, m_Walls.Count)];
+            Cell c1, c2;
+
+            if(c.Position.x == 1 || c.Position.x == m_MazeSize - 2)
+            {
+                c1 = m_Cells[c.Position.x, c.Position.y - 1];
+                c2 = m_Cells[c.Position.x, c.Position.y + 1];
+            }
+            else if(c.Position.y == 1 || c.Position.y == m_MazeSize - 2)
+            {
+                c1 = m_Cells[c.Position.x - 1, c.Position.y];
+                c2 = m_Cells[c.Position.x + 1, c.Position.y];
+            }
+            else
+            {
+                c1 = m_Cells[c.Position.x, c.Position.y - 1];
+                c2 = m_Cells[c.Position.x, c.Position.y + 1];
+            }
+
+            c.UpdateData(c1);
+            c2.UpdateData(c1);
+
+            m_Walls.Remove(c);
+
+            yield return new WaitForSeconds(0.5f);
         }
-
-
-        //int x = Random.Range(1, (m_MazeSize - 2) + 1);
-        //int y;
-
-        //if (x % 2 == 0)
-        //    y = Random.Range(1, ((m_MazeSize - 1) / 2) * 2 + 1);
-        //else
-        //    y = Random.Range(2, ((m_MazeSize - 2) / 2) * 2 + 2);
-
-        //Cell c1, c2;
-
-        //if (m_Cells[x, y].Value == -1)
-        //{
-        //    c1 = m_Cells[x, y - 1];
-        //    c2 = m_Cells[x, y + 1];
-        //}
-        //else
-        //{
-        //    c1 = m_Cells[x - 1, y];
-        //    c2 = m_Cells[x + 1, y];
-        //}
-
-        //if (c1.Value != c2.Value)
-        //{
-        //    m_Cells[x, y].Value = 0;
-
-        //    for (int i = 1; i < m_MazeSize - 1; i += 2)
-        //    {
-        //        for (int j = 1; j < m_MazeSize - 1; j += 2)
-        //        {
-        //            if (m_Cells[x, y].Value == c2.Value)
-        //                m_Cells[x, y].Value = c1.Value;
-        //        }
-        //    }
-        //}
-
-        yield return new WaitForSeconds(2f);
     }
 }
