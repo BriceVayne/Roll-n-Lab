@@ -11,11 +11,12 @@ public class GridGenerator : MonoBehaviour
 
     private Cell[,] m_Cells;
     private List<Cell> m_Walls;
+    private List<List<Cell>> m_Paths;
 
     private void Start()
     {
         GenerateGrid();
-        PlaceStartAndEnd();
+        //PlaceStartAndEnd();
         UpdateMaze();
 
         StartCoroutine(ResolvedMaze());
@@ -27,6 +28,7 @@ public class GridGenerator : MonoBehaviour
 
         m_Cells = new Cell[m_MazeSize, m_MazeSize];
         m_Walls = new List<Cell>();
+        m_Paths = new List<List<Cell>>();
 
         for (int x = 0; x < m_MazeSize; x++)
         {
@@ -56,6 +58,8 @@ public class GridGenerator : MonoBehaviour
                 /// Excluse internal wall
                 if (value == -1)
                     m_Walls.Add(m_Cells[x, y]);
+                else if (value >= 1)
+                    m_Paths.Add(new List<Cell>() { m_Cells[x, y] });
             }
         }
     }
@@ -70,6 +74,7 @@ public class GridGenerator : MonoBehaviour
         cell.Value = 0;
         cell.Color = Color.white;
 
+        m_Paths.Add(new List<Cell>() { cell });
         m_Walls.Remove(cell);
 
         rnd = Random.Range(m_Walls.Count - 4, m_Walls.Count);
@@ -77,6 +82,7 @@ public class GridGenerator : MonoBehaviour
         cell.Value = 0;
         cell.Color = Color.white;
 
+        m_Paths.Add(new List<Cell>() { cell });
         m_Walls.Remove(cell);
     }
 
@@ -94,33 +100,69 @@ public class GridGenerator : MonoBehaviour
 
     private IEnumerator ResolvedMaze()
     {
-        for (int i = 0; i < m_Walls.Count; i++)
+        bool warHorizontal = false;
+        while (m_Paths.Count != 1)
         {
             Cell c = m_Walls[Random.Range(0, m_Walls.Count)];
+            Debug.Log($"Wall : {c.Position}");
             Cell c1, c2;
 
-            if(c.Position.x == 1 || c.Position.x == m_MazeSize - 2)
+            if ((c.Position.x == 1 && c.Position.y != 1) || (c.Position.x == m_MazeSize - 2 && c.Position.y != m_MazeSize - 2))
             {
                 c1 = m_Cells[c.Position.x, c.Position.y - 1];
                 c2 = m_Cells[c.Position.x, c.Position.y + 1];
             }
-            else if(c.Position.y == 1 || c.Position.y == m_MazeSize - 2)
+            else if ((c.Position.y == 1 && c.Position.x != 1) || (c.Position.y == m_MazeSize - 2))
             {
                 c1 = m_Cells[c.Position.x - 1, c.Position.y];
                 c2 = m_Cells[c.Position.x + 1, c.Position.y];
             }
             else
             {
-                c1 = m_Cells[c.Position.x, c.Position.y - 1];
-                c2 = m_Cells[c.Position.x, c.Position.y + 1];
+                if (warHorizontal)
+                {
+                    c1 = m_Cells[c.Position.x, c.Position.y - 1];
+                    c2 = m_Cells[c.Position.x, c.Position.y + 1];
+                }
+                else
+                {
+                    c1 = m_Cells[c.Position.x - 1, c.Position.y];
+                    c2 = m_Cells[c.Position.x + 1, c.Position.y];
+                }
+
+                warHorizontal = !warHorizontal;
             }
 
-            c.UpdateData(c1);
-            c2.UpdateData(c1);
+            Debug.Log($"C1 : {c1.Value} | C2 : {c2.Value}");
 
-            m_Walls.Remove(c);
+            if ((c1.Value != -1 && c2.Value != -1) && c1.Value != c2.Value)
+            {
+                List<Cell> blockFromC1 = m_Paths.Find(i => i.Contains(c1));
+                List<Cell> blockFromC2 = m_Paths.Find(i => i.Contains(c2));
 
-            yield return new WaitForSeconds(0.5f);
+                List<Cell> pathWithC1 = new List<Cell>(blockFromC1);
+                List<Cell> pathWithC2 = new List<Cell>(blockFromC2);
+
+                m_Paths.Remove(blockFromC1);
+                m_Paths.Remove(blockFromC2);
+
+                if (!pathWithC1.Contains(c))
+                    pathWithC1.Add(c);
+
+                pathWithC2.ForEach(i =>
+                {
+                    if (!pathWithC1.Contains(i))
+                        pathWithC1.Add(i);
+                });
+
+                pathWithC1.ForEach(i => i.UpdateData(c1));
+
+                m_Paths.Add(pathWithC1);
+
+                m_Walls.Remove(c);
+            }
+
+            yield return new WaitForSeconds(0.1f);
         }
     }
 }
