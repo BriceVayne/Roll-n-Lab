@@ -1,6 +1,14 @@
 using TMPro;
 using UnityEngine;
 
+public enum CellType
+{
+    BORDER = -2,
+    WALL = -1,
+    START = 0,
+    END = 1
+}
+
 public class CellModel
 {
     public int Value { get; set; }
@@ -55,8 +63,8 @@ public class Cell : MonoBehaviour
 
     public void UpdateData(Cell cell)
     {
-        m_Display.text = cell.model.Value.ToString();
-        m_Sprite.color = cell.model.Color;
+        Value = cell.Value;
+        Color = cell.Color;
     }
 
     public void UpdateName()
@@ -65,8 +73,8 @@ public class Cell : MonoBehaviour
         name = prefix + $" [{model.Position.x},{model.Position.y}]";
     }
 
-    public int Value { get { return model.Value; } set { model.Value = value; } }
-    public Color Color { get { return model.Color; } set { model.Color = value; } }
-    public Vector2Int Position { get { return model.Position; } set { model.Position = value; } }
+    public int Value { get { return model.Value; } set { model.Value = value; m_Display.text = value.ToString(); } }
+    public Color Color { get { return model.Color; } set { model.Color = value; m_Sprite.color = value; } }
+    public Vector2Int Position { get { return model.Position; } }
 
 }
