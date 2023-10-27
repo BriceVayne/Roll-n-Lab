@@ -1,3 +1,4 @@
+using Maze;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour

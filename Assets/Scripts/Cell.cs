@@ -1,80 +1,55 @@
 using TMPro;
 using UnityEngine;
 
-public enum CellType
+namespace Maze
 {
-    BORDER = -2,
-    WALL = -1,
-    START = 0,
-    END = 1
-}
-
-public class CellModel
-{
-    public int Value { get; set; }
-    public Color Color { get; set; }
-    public Vector2Int Position { get; set; }
-
-    public CellModel(int value)
+    /// <summary>
+    /// Display a 2D sprite that represent a cell
+    /// </summary>
+    public class TwoDimensionCell : MonoBehaviour
     {
-        Value = value;
+        private SpriteRenderer m_Sprite;
+        private TMP_Text m_Display;
+
+        private void Awake()
+        {
+            m_Sprite = GetComponentInChildren<SpriteRenderer>();
+            m_Display = GetComponentInChildren<TMP_Text>();
+        }
+
+        /// <summary>
+        /// Initialize cell with value and position.
+        /// Call it onse.
+        /// </summary>
+        /// <param name="_Value">Cell value</param>
+        /// <param name="_Position">Cell position</param>
+        public void Initialize(int _Value, Vector2Int _Position)
+        {
+            transform.position = new Vector2(_Position.x, _Position.y);
+
+            UpdateDisplay(_Value);
+        }
+
+        /// <summary>
+        /// Update GameObject name, sprite and text.
+        /// </summary>
+        /// <param name="_Value">Cell value</param>
+        public void UpdateDisplay(int _Value)
+        {
+            UpdateName(_Value);
+            UpdateValue(_Value);
+        }
+
+        private void UpdateName(int _Value)
+        {
+            string prefix = _Value == -2 ? "Border" : _Value == -1 ? "Wall" : "Cell";
+            name = prefix + $" [{transform.position.x},{transform.position.y}]";
+        }
+
+        private void UpdateValue(int _Value)
+        {
+            m_Sprite.color = CellColorGenerator.GetColor(_Value);
+            m_Display.text = _Value.ToString();
+        }
     }
-
-    public CellModel(int value, Color color)
-    {
-        Value = value;
-        Color = color;
-    }
-
-    public CellModel(int value, Color color, Vector2Int position)
-    {
-        Value = value;
-        Color = color;
-        Position = position;
-    }
-}
-
-public class Cell : MonoBehaviour
-{
-    private SpriteRenderer m_Sprite;
-    private TMP_Text m_Display;
-    private CellModel model;
-
-    private void Awake()
-    {
-        m_Sprite = GetComponentInChildren<SpriteRenderer>();
-        m_Display = GetComponentInChildren<TMP_Text>();
-    }
-
-    public void InitializeData(CellModel cellModel)
-    {
-        model = cellModel;
-        
-        UpdateData();
-        UpdateName();
-    }
-
-    public void UpdateData()
-    {
-        transform.position = new Vector2(model.Position.x, model.Position.y);
-        m_Display.text = model.Value.ToString();
-        m_Sprite.color = model.Color;
-    }
-
-    public void UpdateData(Cell cell)
-    {
-        Value = cell.Value;
-        Color = cell.Color;
-    }
-
-    public void UpdateName()
-    {
-        string prefix = model.Value == -2 ? "Border" : model.Value == -1 ? "Wall" : "Cell";
-        name = prefix + $" [{model.Position.x},{model.Position.y}]";
-    }
-
-    public int Value { get { return model.Value; } set { model.Value = value; m_Display.text = value.ToString(); } }
-    public Color Color { get { return model.Color; } set { model.Color = value; m_Sprite.color = value; } }
-    public Vector2Int Position { get { return model.Position; } }
-
 }

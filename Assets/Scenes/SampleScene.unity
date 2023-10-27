@@ -414,10 +414,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97aa9dd9787e87d49bab3f4221991112, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MazeSize: 33
+  m_MazeSize: 129
+  m_SaveIterationImage: 1
+  shouldGenerateTwoDimensionMaze: 1
+  m_Grid2D: {fileID: 477802474}
   m_Prefab: {fileID: 1470382226465288897, guid: 7999bd23e6e6aeb41a1f75a8ad9a2db7,
     type: 3}
-  m_Grid2D: {fileID: 477802474}
+  shouldGenerateThreeDimensionMaze: 1
   m_Grid3D: {fileID: 497938167}
   m_WallPrefab: {fileID: 5827997316610425636, guid: 612c87a678244724f92ff4422f904484,
     type: 3}

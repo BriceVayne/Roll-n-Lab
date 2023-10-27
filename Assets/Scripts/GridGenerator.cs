@@ -1,193 +1,217 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using UnityEngine;
+using Stopwatch = System.Diagnostics.Stopwatch;
 
-public class GridGenerator : MonoBehaviour
+namespace Maze
 {
-    public int Size { get { return m_MazeSize; } }
-
-    [SerializeField] private int m_MazeSize = 32;
-    [SerializeField] private Cell m_Prefab;
-    [SerializeField] private Transform m_Grid2D;
-    [SerializeField] private Transform m_Grid3D;
-    [SerializeField] private GameObject m_WallPrefab;
-    [SerializeField] private GameObject m_FloorPrefab;
-
-    private Cell[,] m_Cells;
-    private List<Cell> m_Walls;
-    private List<List<Cell>> m_Paths;
-    private Cell m_Start, m_End;
-    private int m_Number;
-
-    private void Awake()
+    public class GridGenerator : MonoBehaviour
     {
-        m_Cells = new Cell[m_MazeSize, m_MazeSize];
-        m_Walls = new List<Cell>();
-        m_Paths = new List<List<Cell>>();
+        public int Size { get { return m_MazeSize; } }
 
-        m_Start = null;
-        m_End = null;
-        m_Number = 2;
-    }
+        [Header("Maze Parameters")]
+        [SerializeField] private int m_MazeSize = 32;
+        [SerializeField][Range(1, 10)] private int m_SaveIterationImage = 1;
+        [Space]
+        [Header("2D Maze")]
+        [SerializeField] private bool shouldGenerateTwoDimensionMaze = true;
+        [SerializeField] private Transform m_Grid2D;
+        [SerializeField] private TwoDimensionCell m_Prefab;
+        [Space]
+        [Header("3D Maze")]
+        [SerializeField] private bool shouldGenerateThreeDimensionMaze = true;
+        [SerializeField] private Transform m_Grid3D;
+        [SerializeField] private GameObject m_WallPrefab;
+        [SerializeField] private GameObject m_FloorPrefab;
 
-    private void Start()
-    {
-        GenerateGrid2D();
-        PutStartAndEnd();
-        UpdateMaze();
+        private CellModel[,] m_Maze;
+        private List<CellModel> m_Walls;
+        private List<List<CellModel>> m_CellBlocks;
+        private HashSet<CellModel> m_Path;
+        private int m_Number;
+        private Queue<CellModel[,]> m_Iterations;
 
-        StartCoroutine(ResolvedMaze());
-    }
+        private StringBuilder debugMessage;
 
-    private void GenerateGrid2D()
-    {
-        for (int x = 0; x < m_MazeSize; x++)
+        private void Awake()
         {
-            for (int y = 0; y < m_MazeSize; y++)
-            {
-                /// Set Value from position
-                int value = 0;
-                if (x == 0 || y == 0 || x == m_MazeSize - 1 || y == m_MazeSize - 1)
-                    value = (int)CellType.BORDER;
-                else if (x % 2 == 0 || y % 2 == 0)
-                    value = (int)CellType.WALL;
-                else
-                    value = m_Number++;
+            m_Maze = new CellModel[m_MazeSize, m_MazeSize];
+            m_Walls = new List<CellModel>();
+            m_CellBlocks = new List<List<CellModel>>();
+            m_Path = new HashSet<CellModel>();
+            m_Number = 0;
+            m_Iterations = new Queue<CellModel[,]>();
 
-                /// Generate color from position
-                Color color;
-                if (value == (int)CellType.WALL || value == (int)CellType.BORDER)
-                    color = Color.black;
-                else
-                    color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f, 1f, 1f);
-
-                /// Create cell and initialize it
-                CellModel model = new CellModel(value, color, new Vector2Int(x, y));
-                m_Cells[x, y] = Instantiate(m_Prefab, m_Grid2D);
-                m_Cells[x, y].InitializeData(model);
-
-                /// Excluse internal wall
-                if (value == -1)
-                    m_Walls.Add(m_Cells[x, y]);
-                else if (value >= 1)
-                    m_Paths.Add(new List<Cell>() { m_Cells[x, y] });
-            }
+            debugMessage = new StringBuilder("===== Debug Log =====\n");
         }
-    }
 
-    private void PutStartAndEnd()
-    {
-        m_Start = m_Paths[0][0];
-        m_End = m_Paths[m_Paths.Count - 1][0];
-    }
-
-    private void UpdateMaze()
-    {
-        for (int x = 0; x < m_MazeSize; x++)
+        private void Start()
         {
-            for (int y = 0; y < m_MazeSize; y++)
-            {
-                m_Cells[x, y].UpdateData();
-                m_Cells[x, y].UpdateName();
-            }
+            GenerateGrid();
+            DeterminePath();
+            ResolvedMaze();
+
+            //using (StreamWriter outputFile = new StreamWriter(Path.Combine(Application.dataPath, "RunAndDry.txt")))
+            //{
+            //    outputFile.WriteLine(debugMessage);
+            //    outputFile.Close();
+            //    Debug.Log("Run & Dry !");
+            //}
         }
-    }
 
-    private IEnumerator ResolvedMaze()
-    {
-        bool warHorizontal = false;
-        while (IsNotResolved())
+        private void GenerateGrid()
         {
-            Cell c = m_Walls[Random.Range(0, m_Walls.Count)];
-            Cell c1, c2;
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
 
-            if ((c.Position.x == 1 && c.Position.y != 1) || (c.Position.x == m_MazeSize - 2 && c.Position.y != m_MazeSize - 2))
+            for (int x = 0; x < m_MazeSize; x++)
             {
-                c1 = m_Cells[c.Position.x, c.Position.y - 1];
-                c2 = m_Cells[c.Position.x, c.Position.y + 1];
-            }
-            else if ((c.Position.y == 1 && c.Position.x != 1) || (c.Position.y == m_MazeSize - 2))
-            {
-                c1 = m_Cells[c.Position.x - 1, c.Position.y];
-                c2 = m_Cells[c.Position.x + 1, c.Position.y];
-            }
-            else
-            {
-                if (warHorizontal)
+                for (int y = 0; y < m_MazeSize; y++)
                 {
-                    c1 = m_Cells[c.Position.x, c.Position.y - 1];
-                    c2 = m_Cells[c.Position.x, c.Position.y + 1];
+                    /// Set Value from position
+                    int value = 0;
+                    if (x == 0 || y == 0 || x == m_MazeSize - 1 || y == m_MazeSize - 1)
+                        value = -2;
+                    else if (x % 2 == 0 || y % 2 == 0)
+                        value = -1;
+                    else
+                        value = m_Number++;
+
+                    /// Create cell and initialize it
+                    m_Maze[x, y] = new CellModel(value, new Vector2Int(x, y));
+
+                    /// Excluse internal wall
+                    if (value == -1)
+                        m_Walls.Add(m_Maze[x, y]);
+                    else if (value >= 0)
+                        m_CellBlocks.Add(new List<CellModel>() { m_Maze[x, y] });
+                }
+            }
+
+            stopwatch.Stop();
+            double seconds = stopwatch.ElapsedMilliseconds / 1000f;
+            debugMessage.Append($"Generation time: {seconds} seconds");
+            Debug.Log($"Generation time: {seconds} seconds");
+        }
+
+        private void DeterminePath()
+        {
+            m_Path.Add(m_CellBlocks[0][0]);
+            m_Path.Add(m_CellBlocks[m_CellBlocks.Count - 1][0]);
+        }
+
+        private void ResolvedMaze()
+        {
+            bool warHorizontal = false;
+            int iteration = 0;
+
+            m_Iterations.Enqueue(m_Maze);
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            while (IsNotResolved())
+            {
+                Stopwatch stopwatchIt = new Stopwatch();
+                stopwatchIt.Start();
+
+                CellModel c = m_Walls[Random.Range(0, m_Walls.Count)];
+                CellModel c1, c2;
+
+                if ((c.Position.x == 1 && c.Position.y != 1) || (c.Position.x == m_MazeSize - 2 && c.Position.y != m_MazeSize - 2))
+                {
+                    c1 = m_Maze[c.Position.x, c.Position.y - 1];
+                    c2 = m_Maze[c.Position.x, c.Position.y + 1];
+                }
+                else if ((c.Position.y == 1 && c.Position.x != 1) || (c.Position.y == m_MazeSize - 2))
+                {
+                    c1 = m_Maze[c.Position.x - 1, c.Position.y];
+                    c2 = m_Maze[c.Position.x + 1, c.Position.y];
                 }
                 else
                 {
-                    c1 = m_Cells[c.Position.x - 1, c.Position.y];
-                    c2 = m_Cells[c.Position.x + 1, c.Position.y];
+                    if (warHorizontal)
+                    {
+                        c1 = m_Maze[c.Position.x, c.Position.y - 1];
+                        c2 = m_Maze[c.Position.x, c.Position.y + 1];
+                    }
+                    else
+                    {
+                        c1 = m_Maze[c.Position.x - 1, c.Position.y];
+                        c2 = m_Maze[c.Position.x + 1, c.Position.y];
+                    }
+
+                    warHorizontal = !warHorizontal;
                 }
 
-                warHorizontal = !warHorizontal;
-            }
-
-            if ((c1.Value != -1 && c2.Value != -1) && c1.Value != c2.Value)
-            {
-                List<Cell> blockFromC1 = m_Paths.Find(i => i.Contains(c1));
-                List<Cell> blockFromC2 = m_Paths.Find(i => i.Contains(c2));
-
-                List<Cell> pathWithC1 = new List<Cell>(blockFromC1);
-                List<Cell> pathWithC2 = new List<Cell>(blockFromC2);
-
-                m_Paths.Remove(blockFromC1);
-                m_Paths.Remove(blockFromC2);
-
-                if (!pathWithC1.Contains(c))
-                    pathWithC1.Add(c);
-
-                pathWithC2.ForEach(i =>
+                if (c1.Value != -1 && c2.Value != -1 && c1.Value != c2.Value)
                 {
-                    if (!pathWithC1.Contains(i))
-                        pathWithC1.Add(i);
-                });
+                    List<CellModel> blockFromC1 = m_CellBlocks.Find(i => i.Contains(c1));
+                    List<CellModel> blockFromC2 = m_CellBlocks.Find(i => i.Contains(c2));
 
-                pathWithC1.ForEach(i => i.UpdateData(c1));
+                    // Move the minus list into the greatest
+                    if(blockFromC1.Count >= blockFromC2.Count)
+                    {
+                        if (!blockFromC1.Contains(c))
+                            blockFromC1.Add(c);
 
-                m_Paths.Add(pathWithC1);
+                        foreach (var cell in blockFromC2)
+                        {
+                            if (!blockFromC1.Contains(cell))
+                                blockFromC1.Add(cell);
+                        }
 
-                m_Walls.Remove(c);
+                        foreach (var cell in blockFromC1)
+                            cell.Value = c1.Value;
+
+                        m_CellBlocks.Remove(blockFromC2);
+                    }
+                    else
+                    {
+                        if (!blockFromC2.Contains(c))
+                            blockFromC2.Add(c);
+
+                        foreach (var cell in blockFromC1)
+                        {
+                            if (!blockFromC2.Contains(cell))
+                                blockFromC2.Add(cell);
+                        }
+
+                        foreach (var cell in blockFromC2)
+                            cell.Value = c2.Value;
+
+                        m_CellBlocks.Remove(blockFromC1);
+                    }
+
+                    m_Walls.Remove(c);
+                }
+
+                if(iteration%m_SaveIterationImage==0)
+                    m_Iterations.Enqueue(m_Maze);
+
+                stopwatchIt.Stop();
+                Debug.Log($"Iteration {iteration} time: {stopwatchIt.ElapsedMilliseconds} miliseconds");
+
+                iteration++;
             }
 
-            yield return new WaitForSeconds(0.01f);
+            stopwatch.Stop();
+            double seconds = stopwatch.ElapsedMilliseconds / 1000f;
+            debugMessage.Append($"Resolution time: {seconds} seconds");
+            Debug.Log($"Resolution time: {seconds} seconds");
+
+            m_Iterations.Enqueue(m_Maze);
         }
 
-        StartCoroutine(GenerateGrid3D());
-    }
-
-    private bool IsNotResolved()
-    {
-        bool listCondition = m_Paths.Count != 1;
-        bool pathExist = false;
-        int startIndex, endIndex;
-
-        startIndex = m_Paths.FindIndex(i => i.Contains(m_Start));
-        endIndex = m_Paths.FindIndex(i => i.Contains(m_End));
-        pathExist = startIndex != endIndex;
-
-        return listCondition && pathExist;
-    }
-
-    private IEnumerator GenerateGrid3D()
-    {
-        for (int x = 0; x < m_MazeSize; x++)
+        private bool IsNotResolved()
         {
-            for (int y = 0; y < m_MazeSize; y++)
-            {
-                Instantiate(m_FloorPrefab, new Vector3(x, y, 0), Quaternion.identity, m_Grid3D);
+            bool hasBlockUnresolved = m_CellBlocks.Count != 1;
+            bool pathExist = m_CellBlocks.Any(innerList => m_Path.All(cellModel => innerList.Contains(cellModel)));
 
-                if(m_Cells[x,y].Value == (int)CellType.BORDER || m_Cells[x, y].Value == (int)CellType.WALL)
-                    Instantiate(m_WallPrefab, new Vector3(x, y, -1), Quaternion.identity, m_Grid3D);
-
-                yield return null;
-            }
+            return hasBlockUnresolved && !pathExist;
         }
 
-        m_Grid2D.gameObject.SetActive(false);
     }
 }
