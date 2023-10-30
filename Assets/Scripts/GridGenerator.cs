@@ -40,9 +40,9 @@ namespace Maze
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            for (int x = 0; x < GameManager.MazeSize; x++)
+            for (int x = 0; x < m_Maze.GetLength(0); x++)
             {
-                for (int y = 0; y < GameManager.MazeSize; y++)
+                for (int y = 0; y < m_Maze.GetLength(1); y++)
                 {
                     /// Set Value from position
                     int value = 0;
