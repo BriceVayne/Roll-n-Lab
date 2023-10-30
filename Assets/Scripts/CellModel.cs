@@ -2,6 +2,24 @@ using UnityEngine;
 
 namespace Maze
 {
+    public struct CellModelJob
+    {
+        public int Value { get; set; }
+        public Vector2Int Position { get; private set; }
+
+        public CellModelJob(int value, Vector2Int position)
+        {
+            Value = value;
+            Position = position;
+        }
+
+        public CellModelJob(CellModelJob _Cell)
+        {
+            Value = _Cell.Value;
+            Position = _Cell.Position;
+        }
+    }
+
     /// <summary>
     /// Model data to maze cell
     /// </summary>

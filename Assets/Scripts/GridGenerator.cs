@@ -1,7 +1,8 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
+using Unity.Collections;
+using Unity.Jobs;
 using UnityEngine;
 using Stopwatch = System.Diagnostics.Stopwatch;
 
@@ -52,13 +53,6 @@ namespace Maze
             GenerateGrid();
             DeterminePath();
             ResolvedMaze();
-
-            //using (StreamWriter outputFile = new StreamWriter(Path.Combine(Application.dataPath, "RunAndDry.txt")))
-            //{
-            //    outputFile.WriteLine(debugMessage);
-            //    outputFile.Close();
-            //    Debug.Log("Run & Dry !");
-            //}
         }
 
         private void GenerateGrid()
@@ -91,9 +85,7 @@ namespace Maze
             }
 
             stopwatch.Stop();
-            double seconds = stopwatch.ElapsedMilliseconds / 1000f;
-            debugMessage.Append($"Generation time: {seconds} seconds");
-            Debug.Log($"Generation time: {seconds} seconds");
+            Debug.Log($"Generation time: {stopwatch.ElapsedMilliseconds} miliseconds");
         }
 
         private void DeterminePath()
@@ -152,7 +144,7 @@ namespace Maze
                     List<CellModel> blockFromC2 = m_CellBlocks.Find(i => i.Contains(c2));
 
                     // Move the minus list into the greatest
-                    if(blockFromC1.Count >= blockFromC2.Count)
+                    if (blockFromC1.Count >= blockFromC2.Count)
                     {
                         if (!blockFromC1.Contains(c))
                             blockFromC1.Add(c);
@@ -188,7 +180,7 @@ namespace Maze
                     m_Walls.Remove(c);
                 }
 
-                if(iteration%m_SaveIterationImage==0)
+                if (iteration % m_SaveIterationImage == 0)
                     m_Iterations.Enqueue(m_Maze);
 
                 stopwatchIt.Stop();
@@ -213,5 +205,97 @@ namespace Maze
             return hasBlockUnresolved && !pathExist;
         }
 
+    }
+
+    public struct ResolutionJob : IJob
+    {
+        [ReadOnly] public BitField32 NativeMazeSize;
+        [ReadOnly] public BitField64 NativeSaveIteration;
+        [ReadOnly] public NativeArray<CellModelJob> NativeMaze;
+        public BitField32 NativeWarHorizontal;
+        public BitField64 NativeIteration;
+        public NativeList<CellModelJob> NativeWalls;
+        public NativeList<CellModelJob> CellBlocks;
+        public NativeQueue<NativeArray<CellModelJob>> Iterations;
+
+        public void Execute()
+        {
+            int wallIndex = Random.Range(0, NativeWalls.Count());
+            CellModelJob c = NativeWalls[wallIndex];
+            CellModelJob c1, c2;
+
+            if ((c.Position.x == 1 && c.Position.y != 1) || (c.Position.x == (int)NativeMazeSize.Value - 2 && c.Position.y != (int)NativeMazeSize.Value - 2))
+            {
+                c1 = NativeMaze[c.Position.x * ((int)NativeMazeSize.Value + c.Position.y - 1)];
+                c2 = NativeMaze[c.Position.x * ((int)NativeMazeSize.Value + c.Position.y + 1)];
+            }
+            else if ((c.Position.y == 1 && c.Position.x != 1) || (c.Position.y == (int)NativeMazeSize.Value - 2))
+            {
+                c1 = NativeMaze[c.Position.x - 1 * ((int)NativeMazeSize.Value + c.Position.y)];
+                c2 = NativeMaze[c.Position.x + 1 * ((int)NativeMazeSize.Value + c.Position.y)];
+            }
+            else
+            {
+                if (NativeWarHorizontal.Value != 0)
+                {
+                    c1 = NativeMaze[c.Position.x * ((int)NativeMazeSize.Value + c.Position.y - 1)];
+                    c2 = NativeMaze[c.Position.x * ((int)NativeMazeSize.Value + c.Position.y + 1)];
+                    NativeWarHorizontal.Value = 0;
+                }
+                else
+                {
+                    c1 = NativeMaze[c.Position.x - 1 * ((int)NativeMazeSize.Value + c.Position.y)];
+                    c2 = NativeMaze[c.Position.x + 1 * ((int)NativeMazeSize.Value + c.Position.y)];
+                    NativeWarHorizontal.Value = 1;
+                }
+            }
+
+            if (c1.Value != -1 && c2.Value != -1 && c1.Value != c2.Value)
+            {
+                List<CellModelJob> blockFromC1 = CellBlocks.Find(i => i.Contains(c1));
+                List<CellModelJob> blockFromC2 = CellBlocks.Find(i => i.Contains(c2));
+
+                // Move the minus list into the greatest
+                if (blockFromC1.Count >= blockFromC2.Count)
+                {
+                    if (!blockFromC1.Contains(c))
+                        blockFromC1.Add(c);
+
+                    foreach (var cell in blockFromC2)
+                    {
+                        if (!blockFromC1.Contains(cell))
+                            blockFromC1.Add(cell);
+                    }
+
+                    for (int i = 0; i < blockFromC1.Count; i++)
+                        blockFromC1[i] = new CellModelJob(c1);
+
+                    CellBlocks.Remove(blockFromC2);
+                }
+                else
+                {
+                    if (!blockFromC2.Contains(c))
+                        blockFromC2.Add(c);
+
+                    foreach (var cell in blockFromC1)
+                    {
+                        if (!blockFromC2.Contains(cell))
+                            blockFromC2.Add(cell);
+                    }
+
+                    for (int i = 0; i < blockFromC2.Count; i++)
+                        blockFromC2[i] = new CellModelJob(c2);
+
+                    CellBlocks.Remove(blockFromC1);
+                }
+
+                NativeWalls.RemoveAt(wallIndex);
+            }
+
+            if ((int)NativeIteration.Value % (int)NativeSaveIteration.Value == 0)
+                Iterations.Enqueue(NativeMaze);
+
+            NativeIteration.Value++;
+        }
     }
 }
