@@ -2,7 +2,6 @@ using Extension;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using Stopwatch = System.Diagnostics.Stopwatch;
@@ -22,15 +21,25 @@ namespace Maze
 
         private void Start()
         {
+            ResetData();
+            GenerateGrid();
+            DeterminePath();
+            ResolvedMaze();
+        }
+
+        private void Update()
+        {
+            if(Input.GetKeyUp(KeyCode.R) && GameManager.IsReadyToReload)
+                ReloadGrid();
+        }
+
+        private void ResetData()
+        {
             m_Maze = new CellModel[GameManager.MazeSize.x, GameManager.MazeSize.y];
             m_Walls = new List<CellModel>();
             m_CellBlocks = new List<List<CellModel>>();
             m_Path = new HashSet<CellModel>();
             m_Number = 0;
-
-            GenerateGrid();
-            DeterminePath();
-            ResolvedMaze();
         }
 
         private void GenerateGrid()
@@ -169,25 +178,8 @@ namespace Maze
                 Debug.Log($"Iteration {iteration} time: {stopwatchIt.ElapsedMilliseconds} miliseconds");
             }
 
-            /// Move isolate cells to walls
-            var blockCopy = new List<List<CellModel>>(m_CellBlocks);
-            for (int i = 0; i < blockCopy.Count; i++)
-            {
-                if (blockCopy[i].Count <= 3) //TODO: define a better number
-                {
-                    for (int j = 0; j < blockCopy[i].Count; j++)
-                    {
-                        CellModel cellToWall = m_CellBlocks[i][j];
-                        cellToWall.Value = -1;
-                        m_Walls.Add(cellToWall);
-                    }
-
-                    m_CellBlocks.RemoveAt(i);
-                }
-            }
-
             /// Remove somes walls to be a complex maze
-            int nbWallToBreak = 20; //TODO: define a better number
+            int nbWallToBreak = 50; //TODO: define a better number
             int wallBreak = 0;
 
             while (wallBreak < nbWallToBreak) 
@@ -200,7 +192,7 @@ namespace Maze
                    m_Maze[wallToCell.Position.x - 1, wallToCell.Position.y].Value == m_Maze[wallToCell.Position.x + 1, wallToCell.Position.y].Value &&
                    m_Maze[wallToCell.Position.x, wallToCell.Position.y - 1].Value != m_Maze[wallToCell.Position.x - 1, wallToCell.Position.y].Value)
                 {
-                    wallToCell.Value = m_Number++;
+                    wallToCell.Value = m_CellBlocks[0][0].Value;
                     m_CellBlocks.Add(new List<CellModel>() { wallToCell });
                     m_Walls.RemoveAt(index);
 
@@ -221,7 +213,15 @@ namespace Maze
             bool hasBlockUnresolved = m_CellBlocks.Count != 1;
             bool pathExist = m_CellBlocks.Any(innerList => m_Path.All(cellModel => innerList.Contains(cellModel)));
 
-            return hasBlockUnresolved && !pathExist;
+            return hasBlockUnresolved || !pathExist;
+        }
+
+        private void ReloadGrid()
+        {
+            ResetData();
+            GenerateGrid();
+            DeterminePath();
+            ResolvedMaze();
         }
     }
 }

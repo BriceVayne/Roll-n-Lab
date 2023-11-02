@@ -39,7 +39,10 @@ namespace Maze
                         }
                     }
                     else if (m_Iterations != null && m_Iterations.Count == 0)
+                    {
                         m_IsFinished = true;
+                        GameManager.IsReadyToReload = true;
+                    }
 
                     m_Time = 0f;
                 }
@@ -48,17 +51,34 @@ namespace Maze
 
         private void GenerateGrid(Queue<CellModel[,]> iterations)
         {
-            m_Grid = new TwoDimensionCell[GameManager.MazeSize.x, GameManager.MazeSize.y];
             m_Iterations = iterations;
 
-            if (m_Iterations.TryDequeue(out var iteration))
+            if (m_Grid == null)
             {
-                for (int x = 0; x < GameManager.MazeSize.x; x++)
+                m_Grid = new TwoDimensionCell[GameManager.MazeSize.x, GameManager.MazeSize.y];
+
+                if (m_Iterations.TryDequeue(out var iteration))
                 {
-                    for (int y = 0; y < GameManager.MazeSize.y; y++)
+                    for (int x = 0; x < GameManager.MazeSize.x; x++)
                     {
-                        m_Grid[x, y] = Instantiate(m_Prefab, m_Content);
-                        m_Grid[x, y].Initialize(iteration[x, y].Value, iteration[x, y].Position);
+                        for (int y = 0; y < GameManager.MazeSize.y; y++)
+                        {
+                            m_Grid[x, y] = Instantiate(m_Prefab, m_Content);
+                            m_Grid[x, y].Initialize(iteration[x, y].Value, iteration[x, y].Position);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (m_Iterations.TryDequeue(out var iteration))
+                {
+                    for (int x = 0; x < GameManager.MazeSize.x; x++)
+                    {
+                        for (int y = 0; y < GameManager.MazeSize.y; y++)
+                        {
+                            m_Grid[x, y].UpdateDisplay(iteration[x, y].Value);
+                        }
                     }
                 }
             }
