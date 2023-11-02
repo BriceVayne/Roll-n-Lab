@@ -15,10 +15,14 @@ namespace Maze
             if (!m_CellColor.ContainsKey(_Value))
             {
                 Color color;
-                if (_Value < 0)
+                if(_Value == 0)
+                    color = Color.white;
+                else if (_Value < 0)
                     color = Color.black;
-                else
+                else if(_Value > 0)
                     color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f, 1f, 1f);
+                else
+                    color = Color.gray;
 
                 m_CellColor.Add(_Value, color);
             }

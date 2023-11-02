@@ -171,7 +171,7 @@ MonoBehaviour:
   m_Prefab: {fileID: 1470382226465288897, guid: 7999bd23e6e6aeb41a1f75a8ad9a2db7,
     type: 3}
   m_Content: {fileID: 477802474}
-  m_IterationTime: 0
+  m_IterationTime: 0.1
 --- !u!1 &497938166
 GameObject:
   m_ObjectHideFlags: 0

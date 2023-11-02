@@ -21,16 +21,16 @@ namespace Maze
 
         private void Start()
         {
-            ResetData();
-            GenerateGrid();
-            DeterminePath();
-            ResolvedMaze();
+            ReloadGrid();
         }
 
         private void Update()
         {
             if(Input.GetKeyUp(KeyCode.R) && GameManager.IsReadyToReload)
+            {
+                GameManager.IsReadyToReload = false;
                 ReloadGrid();
+            }
         }
 
         private void ResetData()
@@ -39,7 +39,7 @@ namespace Maze
             m_Walls = new List<CellModel>();
             m_CellBlocks = new List<List<CellModel>>();
             m_Path = new HashSet<CellModel>();
-            m_Number = 0;
+            m_Number = 1;
         }
 
         private void GenerateGrid()
@@ -77,7 +77,18 @@ namespace Maze
 
         private void DeterminePath()
         {
+            /// Start
             m_Path.Add(m_CellBlocks[0][0]);
+
+            /// Middle
+            //TODO: define a better number
+            for (int i = 0; i < 5; i++)
+            {
+                int rnd = Random.Range(0, m_CellBlocks.Count);
+                m_Path.Add(m_CellBlocks[rnd][0]);
+            }
+
+            /// End
             m_Path.Add(m_CellBlocks[m_CellBlocks.Count - 1][0]);
         }
 
@@ -178,8 +189,10 @@ namespace Maze
                 Debug.Log($"Iteration {iteration} time: {stopwatchIt.ElapsedMilliseconds} miliseconds");
             }
 
+            Debug.Log($"Walls : {m_Walls.Count}");
+
             /// Remove somes walls to be a complex maze
-            int nbWallToBreak = 50; //TODO: define a better number
+            int nbWallToBreak = 5; //TODO: define a better number
             int wallBreak = 0;
 
             while (wallBreak < nbWallToBreak) 
@@ -193,12 +206,15 @@ namespace Maze
                    m_Maze[wallToCell.Position.x, wallToCell.Position.y - 1].Value != m_Maze[wallToCell.Position.x - 1, wallToCell.Position.y].Value)
                 {
                     wallToCell.Value = m_CellBlocks[0][0].Value;
-                    m_CellBlocks.Add(new List<CellModel>() { wallToCell });
+                    m_CellBlocks[0].Add(wallToCell);
                     m_Walls.RemoveAt(index);
 
                     wallBreak++;
                 }
             }
+
+            foreach (CellModel cell in m_Path)
+                cell.Value = 0;
 
             stopwatch.Stop();
             Debug.Log($"Resolution time: {stopwatch.ElapsedMilliseconds} milliseconds");

@@ -51,7 +51,14 @@ namespace Maze
 
         private void GenerateGrid(Queue<CellModel[,]> iterations)
         {
+            if (m_Iterations == null)
+                m_Iterations = new Queue<CellModel[,]>();
+
+            m_Iterations.Clear();
             m_Iterations = iterations;
+
+            m_Time = 0f;
+            m_IsFinished = false;
 
             if (m_Grid == null)
             {
