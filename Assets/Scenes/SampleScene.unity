@@ -477,7 +477,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af0ebee36f31b57438c91064dd803305, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Size: 15
+  m_Size: {x: 33, y: 33}
   m_Interval: 1
 --- !u!4 &1631769675
 Transform:

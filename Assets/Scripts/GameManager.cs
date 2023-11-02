@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-    public static int MazeSize { get; private set; }
+    public static Vector2Int MazeSize { get; private set; }
     public static int IterationInterval { get; private set; }
 
-    [SerializeField] private int m_Size = 33;
+    [SerializeField] private Vector2Int m_Size = new Vector2Int(33,33);
     [SerializeField] [Range(1,100)] private int m_Interval = 1;
 
     private void Awake()

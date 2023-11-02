@@ -19,17 +19,14 @@ namespace Maze
         private HashSet<CellModel> m_Path;
         private int m_Number;
 
-        private void Awake()
+        private void Start()
         {
-            m_Maze = new CellModel[GameManager.MazeSize, GameManager.MazeSize];
+            m_Maze = new CellModel[GameManager.MazeSize.x, GameManager.MazeSize.y];
             m_Walls = new List<CellModel>();
             m_CellBlocks = new List<List<CellModel>>();
             m_Path = new HashSet<CellModel>();
             m_Number = 0;
-        }
 
-        private void Start()
-        {
             GenerateGrid();
             DeterminePath();
             ResolvedMaze();
@@ -46,7 +43,7 @@ namespace Maze
                 {
                     /// Set Value from position
                     int value = 0;
-                    if (x == 0 || y == 0 || x == GameManager.MazeSize - 1 || y == GameManager.MazeSize - 1)
+                    if (x == 0 || y == 0 || x == GameManager.MazeSize.x - 1 || y == GameManager.MazeSize.y - 1)
                         value = -2;
                     else if (x % 2 == 0 || y % 2 == 0)
                         value = -1;
@@ -85,6 +82,7 @@ namespace Maze
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
+            /// Resolved the main path
             while (IsNotResolved())
             {
                 Stopwatch stopwatchIt = new Stopwatch();
@@ -93,12 +91,12 @@ namespace Maze
                 CellModel c = m_Walls[Random.Range(0, m_Walls.Count)];
                 CellModel c1, c2;
 
-                if ((c.Position.x == 1 && c.Position.y != 1) || (c.Position.x == GameManager.MazeSize - 2 && c.Position.y != GameManager.MazeSize - 2))
+                if ((c.Position.x == 1 && c.Position.y != 1) || (c.Position.x == GameManager.MazeSize.x - 2 && c.Position.y != GameManager.MazeSize.y - 2))
                 {
                     c1 = m_Maze[c.Position.x, c.Position.y - 1];
                     c2 = m_Maze[c.Position.x, c.Position.y + 1];
                 }
-                else if ((c.Position.y == 1 && c.Position.x != 1) || (c.Position.y == GameManager.MazeSize - 2))
+                else if ((c.Position.y == 1 && c.Position.x != 1) || (c.Position.y == GameManager.MazeSize.y - 2))
                 {
                     c1 = m_Maze[c.Position.x - 1, c.Position.y];
                     c2 = m_Maze[c.Position.x + 1, c.Position.y];
@@ -169,6 +167,34 @@ namespace Maze
                 stopwatchIt.Stop();
                 Debug.Log($"Iteration {iteration} time: {stopwatchIt.ElapsedMilliseconds} miliseconds");
             }
+
+            /// Remove somes walls to be a complex maze
+            int nbWallToBreak = 20;
+            int wallBreak = 0;
+
+            while (wallBreak < nbWallToBreak) 
+            {
+                int index = Random.Range(0, m_Walls.Count);
+                CellModel cell = m_Walls.ElementAt(index);
+
+                /// If the two neighbour is wall
+                if(m_Maze[cell.Position.x, cell.Position.y - 1].Value == m_Maze[cell.Position.x, cell.Position.y + 1].Value &&
+                   m_Maze[cell.Position.x - 1, cell.Position.y].Value == m_Maze[cell.Position.x + 1, cell.Position.y].Value &&
+                   m_Maze[cell.Position.x, cell.Position.y - 1].Value != m_Maze[cell.Position.x - 1, cell.Position.y].Value)
+                {
+                    cell.Value = m_Number++;
+                    m_CellBlocks.Add(new List<CellModel>() { cell });
+                    m_Walls.RemoveAt(index);
+
+                    wallBreak++;
+                }
+            }
+
+
+            /// Move isolate cells to walls
+            /// 
+
+
 
             stopwatch.Stop();
             Debug.Log($"Resolution time: {stopwatch.ElapsedMilliseconds} milliseconds");
