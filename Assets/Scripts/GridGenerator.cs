@@ -2,6 +2,7 @@ using Extension;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using Stopwatch = System.Diagnostics.Stopwatch;
@@ -168,33 +169,44 @@ namespace Maze
                 Debug.Log($"Iteration {iteration} time: {stopwatchIt.ElapsedMilliseconds} miliseconds");
             }
 
+            /// Move isolate cells to walls
+            var blockCopy = new List<List<CellModel>>(m_CellBlocks);
+            for (int i = 0; i < blockCopy.Count; i++)
+            {
+                if (blockCopy[i].Count <= 3) //TODO: define a better number
+                {
+                    for (int j = 0; j < blockCopy[i].Count; j++)
+                    {
+                        CellModel cellToWall = m_CellBlocks[i][j];
+                        cellToWall.Value = -1;
+                        m_Walls.Add(cellToWall);
+                    }
+
+                    m_CellBlocks.RemoveAt(i);
+                }
+            }
+
             /// Remove somes walls to be a complex maze
-            int nbWallToBreak = 20;
+            int nbWallToBreak = 20; //TODO: define a better number
             int wallBreak = 0;
 
             while (wallBreak < nbWallToBreak) 
             {
                 int index = Random.Range(0, m_Walls.Count);
-                CellModel cell = m_Walls.ElementAt(index);
+                CellModel wallToCell = m_Walls.ElementAt(index);
 
-                /// If the two neighbour is wall
-                if(m_Maze[cell.Position.x, cell.Position.y - 1].Value == m_Maze[cell.Position.x, cell.Position.y + 1].Value &&
-                   m_Maze[cell.Position.x - 1, cell.Position.y].Value == m_Maze[cell.Position.x + 1, cell.Position.y].Value &&
-                   m_Maze[cell.Position.x, cell.Position.y - 1].Value != m_Maze[cell.Position.x - 1, cell.Position.y].Value)
+                /// If the two neightboor's pair is the same number and the two numbers is different
+                if(m_Maze[wallToCell.Position.x, wallToCell.Position.y - 1].Value == m_Maze[wallToCell.Position.x, wallToCell.Position.y + 1].Value &&
+                   m_Maze[wallToCell.Position.x - 1, wallToCell.Position.y].Value == m_Maze[wallToCell.Position.x + 1, wallToCell.Position.y].Value &&
+                   m_Maze[wallToCell.Position.x, wallToCell.Position.y - 1].Value != m_Maze[wallToCell.Position.x - 1, wallToCell.Position.y].Value)
                 {
-                    cell.Value = m_Number++;
-                    m_CellBlocks.Add(new List<CellModel>() { cell });
+                    wallToCell.Value = m_Number++;
+                    m_CellBlocks.Add(new List<CellModel>() { wallToCell });
                     m_Walls.RemoveAt(index);
 
                     wallBreak++;
                 }
             }
-
-
-            /// Move isolate cells to walls
-            /// 
-
-
 
             stopwatch.Stop();
             Debug.Log($"Resolution time: {stopwatch.ElapsedMilliseconds} milliseconds");
