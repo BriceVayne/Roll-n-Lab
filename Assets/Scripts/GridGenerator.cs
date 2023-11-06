@@ -82,11 +82,11 @@ namespace Maze
 
             /// Middle
             //TODO: define a better number
-            for (int i = 0; i < 5; i++)
-            {
-                int rnd = Random.Range(0, m_CellBlocks.Count);
-                m_Path.Add(m_CellBlocks[rnd][0]);
-            }
+            //for (int i = 0; i < 5; i++)
+            //{
+            //    int rnd = Random.Range(0, m_CellBlocks.Count);
+            //    m_Path.Add(m_CellBlocks[rnd][0]);
+            //}
 
             /// End
             m_Path.Add(m_CellBlocks[m_CellBlocks.Count - 1][0]);
@@ -192,7 +192,7 @@ namespace Maze
             Debug.Log($"Walls : {m_Walls.Count}");
 
             /// Remove somes walls to be a complex maze
-            int nbWallToBreak = 5; //TODO: define a better number
+            int nbWallToBreak = 10; //TODO: define a better number
             int wallBreak = 0;
 
             while (wallBreak < nbWallToBreak) 
