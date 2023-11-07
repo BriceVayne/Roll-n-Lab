@@ -3,6 +3,19 @@ using UnityEngine;
 namespace Maze
 {
     /// <summary>
+    /// The cell type list
+    /// </summary>
+    public enum ECellType
+    {
+        BORDER,
+        WALL,
+        START,
+        PATH,
+        END,
+        EMPTY
+    }
+
+    /// <summary>
     /// Model data to maze cell
     /// </summary>
     public class CellModel
@@ -11,6 +24,11 @@ namespace Maze
         /// Internal cell value
         /// </summary>
         public int Value { get; set; }
+
+        /// <summary>
+        /// Internal cell type
+        /// </summary>
+        public ECellType Type { get; set; }
 
         /// <summary>
         /// Internal cell position
@@ -22,10 +40,11 @@ namespace Maze
         /// </summary>
         /// <param name="value">Internal cell value</param>
         /// <param name="position">Internal cell position</param>
-        public CellModel(int value, Vector2Int position)
+        public CellModel(int _Value, Vector2Int _Position, ECellType _Type)
         {
-            Value = value;
-            Position = position;
+            Value = _Value;
+            Position = _Position;
+            Type = _Type;
         }
 
         /// <summary>
@@ -36,6 +55,7 @@ namespace Maze
         {
             Value = model.Value;
             Position = model.Position;
+            Type = model.Type;
         }
     }
 }

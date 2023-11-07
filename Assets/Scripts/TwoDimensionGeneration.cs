@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,16 +11,19 @@ namespace Maze
         [SerializeField] private Transform m_Content;
         [SerializeField] private float m_IterationTime;
 
+        private Action<bool> m_ToggleInfos;
         private TwoDimensionCell[,] m_Grid;
         private Queue<CellModel[,]> m_Iterations;
-        private float m_Time;
         private bool m_IsFinished;
+        private float m_Time;
 
         private void Awake()
         {
-            m_Time = 0f;
-            m_IsFinished = false;
             m_Generator.OnResolutionFinished += GenerateGrid;
+            m_ToggleInfos = null;
+            m_Iterations = new Queue<CellModel[,]>();
+            m_IsFinished = false;
+            m_Time = 0f;
         }
 
         private void Update()
@@ -35,60 +39,64 @@ namespace Maze
                         {
                             for (int x = 0; x < GameManager.MazeSize.x; x++)
                                 for (int y = 0; y < GameManager.MazeSize.y; y++)
-                                    m_Grid[x, y].UpdateDisplay(iteration[x, y].Value);
+                                    m_Grid[x, y].UpdateDisplay(iteration[x, y].Value, iteration[x, y].Type);
                         }
                     }
                     else if (m_Iterations != null && m_Iterations.Count == 0)
                     {
                         m_IsFinished = true;
                         GameManager.IsReadyToReload = true;
+                        m_ToggleInfos.Invoke(false);
                     }
 
                     m_Time = 0f;
                 }
             }
+
+            if (m_IsFinished && Input.GetKeyDown(KeyCode.Space))
+                m_ToggleInfos.Invoke(true);
+            else if(m_IsFinished && Input.GetKeyUp(KeyCode.Space))
+                m_ToggleInfos.Invoke(false);
+
         }
 
         private void GenerateGrid(Queue<CellModel[,]> iterations)
         {
-            if (m_Iterations == null)
-                m_Iterations = new Queue<CellModel[,]>();
-
             m_Iterations.Clear();
             m_Iterations = iterations;
 
-            m_Time = 0f;
             m_IsFinished = false;
+            m_Time = 0f;
 
-            if (m_Grid == null)
+            if(m_Iterations.TryDequeue(out var iteration))
             {
-                m_Grid = new TwoDimensionCell[GameManager.MazeSize.x, GameManager.MazeSize.y];
-
-                if (m_Iterations.TryDequeue(out var iteration))
+                if (m_Grid == null)
+                    m_Grid = CreateGrid(iteration);
+                else
                 {
-                    for (int x = 0; x < GameManager.MazeSize.x; x++)
-                    {
-                        for (int y = 0; y < GameManager.MazeSize.y; y++)
-                        {
-                            m_Grid[x, y] = Instantiate(m_Prefab, m_Content);
-                            m_Grid[x, y].Initialize(iteration[x, y].Value, iteration[x, y].Position);
-                        }
-                    }
+                    for (int x = 0; x < m_Grid.GetLength(0); x++)
+                        for (int y = 0; y < m_Grid.GetLength(1); y++)
+                            m_Grid[x, y].UpdateDisplay(iteration[x, y].Value, iteration[x, y].Type);
                 }
             }
-            else
+        }
+
+        private TwoDimensionCell[,] CreateGrid(CellModel[,] models)
+        {
+            var grid = new TwoDimensionCell[models.GetLength(0), models.GetLength(1)];
+
+            for (int x = 0; x < models.GetLength(0); x++)
             {
-                if (m_Iterations.TryDequeue(out var iteration))
+                for (int y = 0; y < models.GetLength(1); y++)
                 {
-                    for (int x = 0; x < GameManager.MazeSize.x; x++)
-                    {
-                        for (int y = 0; y < GameManager.MazeSize.y; y++)
-                        {
-                            m_Grid[x, y].UpdateDisplay(iteration[x, y].Value);
-                        }
-                    }
+                    grid[x, y] = Instantiate(m_Prefab, m_Content);
+                    grid[x, y].Initialize(models[x, y].Value, models[x, y].Position, models[x,y].Type);
+
+                    m_ToggleInfos += grid[x, y].ToggleInfo;
                 }
             }
+
+            return grid;
         }
     }
 }

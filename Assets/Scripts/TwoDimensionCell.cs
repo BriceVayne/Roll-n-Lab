@@ -8,13 +8,19 @@ namespace Maze
     /// </summary>
     public class TwoDimensionCell : MonoBehaviour
     {
-        private SpriteRenderer m_Sprite;
-        private TMP_Text m_Display;
+        public ECellType Type { get { return m_InternalType; } }
+
+        [SerializeField] private TMP_Text m_ValueText;
+        [SerializeField] private TMP_Text m_TypeText;
+        [SerializeField] private SpriteRenderer m_Sprite;
+        [SerializeField] private GameObject m_SelectedSprite;
+
+        private int m_InternalValue;
+        private ECellType m_InternalType;
 
         private void Awake()
         {
-            m_Sprite = GetComponentInChildren<SpriteRenderer>();
-            m_Display = GetComponentInChildren<TMP_Text>();
+            ToggleSelectedObject(false);
         }
 
         /// <summary>
@@ -23,33 +29,76 @@ namespace Maze
         /// </summary>
         /// <param name="_Value">Cell value</param>
         /// <param name="_Position">Cell position</param>
-        public void Initialize(int _Value, Vector2Int _Position)
+        /// <param name="_InternalType">Cell type</param>
+        public void Initialize(int _Value, Vector2Int _Position, ECellType _InternalType)
         {
             transform.position = new Vector2(_Position.x, _Position.y);
 
-            UpdateDisplay(_Value);
+            UpdateDisplay(_Value, _InternalType);
         }
 
         /// <summary>
-        /// Update GameObject name, sprite and text.
+        ///  Update GameObject name, sprite and text.
         /// </summary>
         /// <param name="_Value">Cell value</param>
-        public void UpdateDisplay(int _Value)
+        /// <param name="_InternalType">Cell type</param>
+        public void UpdateDisplay(int _Value, ECellType _InternalType)
         {
-            UpdateName(_Value);
-            UpdateValue(_Value);
+            m_InternalValue = _Value;
+            m_InternalType = _InternalType;
+
+            UpdateName();
+            UpdateValue();
+            UpdateType();
         }
 
-        private void UpdateName(int _Value)
+        /// <summary>
+        /// Show/Hide debug informations.
+        /// </summary>
+        /// <param name="isShow"></param>
+        public void ToggleInfo(bool isShow)
         {
-            string prefix = _Value == -2 ? "Border" : _Value == -1 ? "Wall" : "Cell";
+            if (isShow)
+                ShowInfo();
+            else
+                HideInfo();
+        }
+
+        public void Selected()
+            => ToggleSelectedObject(true);
+
+        public void Deselected()
+            => ToggleSelectedObject(false);
+
+        private void UpdateName()
+        {
+            string prefix = m_InternalValue == -2 ? "Border" : m_InternalValue == -1 ? "Wall" : "Cell";
             name = prefix + $" [{transform.position.x},{transform.position.y}]";
         }
 
-        private void UpdateValue(int _Value)
+        private void UpdateValue()
         {
-            m_Sprite.color = CellColorGenerator.GetColor(_Value);
-            m_Display.text = _Value.ToString();
+            m_Sprite.color = CellColorGenerator.GetColor(m_InternalValue);
+            m_ValueText.text = m_InternalValue.ToString();
         }
+
+        private void UpdateType()
+            => m_TypeText.text = m_InternalType.ToString();
+
+        private void ShowInfo()
+        {
+            UpdateValue();
+            UpdateType();
+        }
+
+        private void HideInfo()
+        {
+            m_Sprite.color = CellColorGenerator.GetColorByType(m_InternalType);
+            m_ValueText.text = string.Empty;
+            m_TypeText.text = string.Empty;
+        }
+
+        private void ToggleSelectedObject(bool isSelected)
+            => m_SelectedSprite.SetActive(isSelected);
     }
 }

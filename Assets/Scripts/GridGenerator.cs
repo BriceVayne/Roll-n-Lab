@@ -61,7 +61,7 @@ namespace Maze
                         value = m_Number++;
 
                     /// Create cell and initialize it
-                    m_Maze[x, y] = new CellModel(value, new Vector2Int(x, y));
+                    m_Maze[x, y] = new CellModel(value, new Vector2Int(x, y), value == -2 ? ECellType.BORDER : value == -1 ? ECellType.WALL : ECellType.EMPTY);
 
                     /// Excluse internal wall
                     if (value == -1)
@@ -156,7 +156,10 @@ namespace Maze
                         }
 
                         foreach (var cell in blockFromC1)
+                        {
                             cell.Value = c1.Value;
+                            cell.Type = c1.Type;
+                        }
 
                         m_CellBlocks.Remove(blockFromC2);
                     }
@@ -172,7 +175,10 @@ namespace Maze
                         }
 
                         foreach (var cell in blockFromC2)
+                        {
                             cell.Value = c2.Value;
+                            cell.Type = c2.Type;
+                        }
 
                         m_CellBlocks.Remove(blockFromC1);
                     }
@@ -206,6 +212,7 @@ namespace Maze
                    m_Maze[wallToCell.Position.x, wallToCell.Position.y - 1].Value != m_Maze[wallToCell.Position.x - 1, wallToCell.Position.y].Value)
                 {
                     wallToCell.Value = m_CellBlocks[0][0].Value;
+                    wallToCell.Type = ECellType.EMPTY;
                     m_CellBlocks[0].Add(wallToCell);
                     m_Walls.RemoveAt(index);
 
@@ -213,8 +220,18 @@ namespace Maze
                 }
             }
 
-            foreach (CellModel cell in m_Path)
-                cell.Value = 0;
+
+            for (int i = 0; i < m_Path.Count; i++)
+            {
+                if (i == 0)
+                    m_Path.ElementAt(i).Type = ECellType.START;
+                else if (i == m_Path.Count - 1)
+                    m_Path.ElementAt(i).Type = ECellType.END;
+                else
+                    m_Path.ElementAt(i).Type = ECellType.PATH;
+
+                m_Path.ElementAt(i).Value = 0;
+            }
 
             stopwatch.Stop();
             Debug.Log($"Resolution time: {stopwatch.ElapsedMilliseconds} milliseconds");
