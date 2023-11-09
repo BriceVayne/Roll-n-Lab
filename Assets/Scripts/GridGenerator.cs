@@ -16,7 +16,6 @@ namespace Maze
         private CellModel[,] m_Maze;
         private List<CellModel> m_Walls;
         private List<List<CellModel>> m_CellBlocks;
-        private HashSet<CellModel> m_Path;
         private int m_Number;
 
         private void Start()
@@ -38,7 +37,6 @@ namespace Maze
             m_Maze = new CellModel[GameManager.MazeSize.x, GameManager.MazeSize.y];
             m_Walls = new List<CellModel>();
             m_CellBlocks = new List<List<CellModel>>();
-            m_Path = new HashSet<CellModel>();
             m_Number = 1;
         }
 
@@ -78,18 +76,18 @@ namespace Maze
         private void DeterminePath()
         {
             /// Start
-            m_Path.Add(m_CellBlocks[0][0]);
+            GameManager.MinimalPath.Add(m_CellBlocks[0][0]);
 
             /// Middle
             //TODO: define a better number
             //for (int i = 0; i < 5; i++)
             //{
             //    int rnd = Random.Range(0, m_CellBlocks.Count);
-            //    m_Path.Add(m_CellBlocks[rnd][0]);
+            //    GameManager.MinimalPath.Add(m_CellBlocks[rnd][0]);
             //}
 
             /// End
-            m_Path.Add(m_CellBlocks[m_CellBlocks.Count - 1][0]);
+            GameManager.MinimalPath.Add(m_CellBlocks[m_CellBlocks.Count - 1][0]);
         }
 
         private void ResolvedMaze()
@@ -221,16 +219,16 @@ namespace Maze
             }
 
 
-            for (int i = 0; i < m_Path.Count; i++)
+            for (int i = 0; i < GameManager.MinimalPath.Count; i++)
             {
                 if (i == 0)
-                    m_Path.ElementAt(i).Type = ECellType.START;
-                else if (i == m_Path.Count - 1)
-                    m_Path.ElementAt(i).Type = ECellType.END;
+                    GameManager.MinimalPath.ElementAt(i).Type = ECellType.START;
+                else if (i == GameManager.MinimalPath.Count - 1)
+                    GameManager.MinimalPath.ElementAt(i).Type = ECellType.END;
                 else
-                    m_Path.ElementAt(i).Type = ECellType.PATH;
+                    GameManager.MinimalPath.ElementAt(i).Type = ECellType.PATH;
 
-                m_Path.ElementAt(i).Value = 0;
+                GameManager.MinimalPath.ElementAt(i).Value = 0;
             }
 
             stopwatch.Stop();
@@ -244,7 +242,7 @@ namespace Maze
         private bool IsNotResolved()
         {
             bool hasBlockUnresolved = m_CellBlocks.Count != 1;
-            bool pathExist = m_CellBlocks.Any(innerList => m_Path.All(cellModel => innerList.Contains(cellModel)));
+            bool pathExist = m_CellBlocks.Any(innerList => GameManager.MinimalPath.All(cellModel => innerList.Contains(cellModel)));
 
             return hasBlockUnresolved || !pathExist;
         }
