@@ -77,7 +77,7 @@ namespace Maze
         {
             /// Start
             GameManager.MinimalPath.Add(m_CellBlocks[0][0]);
-
+            
             /// Middle
             //TODO: define a better number
             //for (int i = 0; i < 5; i++)

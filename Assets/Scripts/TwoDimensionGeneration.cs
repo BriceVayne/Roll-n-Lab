@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Maze
@@ -46,6 +47,10 @@ namespace Maze
                     {
                         m_IsFinished = true;
                         GameManager.IsReadyToReload = true;
+
+                        Vector2Int startPos = GameManager.MinimalPath.ElementAt(0).Position;
+                        GameManager.SelectedPath.Push(m_Grid[startPos.x, startPos.y]);
+
                         m_ToggleInfos.Invoke(false);
                     }
 
