@@ -20,16 +20,8 @@ namespace Maze
 
         private void Start()
         {
+            GameManager.OnGameReload += ReloadGrid;
             ReloadGrid();
-        }
-
-        private void Update()
-        {
-            if(Input.GetKeyUp(KeyCode.R) && GameManager.IsReadyToReload)
-            {
-                GameManager.IsReadyToReload = false;
-                ReloadGrid();
-            }
         }
 
         private void ResetData()
@@ -38,6 +30,9 @@ namespace Maze
             m_Walls = new List<CellModel>();
             m_CellBlocks = new List<List<CellModel>>();
             m_Number = 1;
+
+            GameManager.MinimalPath.Clear();
+            GameManager.SelectedPath.Clear();
         }
 
         private void GenerateGrid()
@@ -249,6 +244,7 @@ namespace Maze
 
         private void ReloadGrid()
         {
+            Debug.Log("Reload Grid !");
             ResetData();
             GenerateGrid();
             DeterminePath();

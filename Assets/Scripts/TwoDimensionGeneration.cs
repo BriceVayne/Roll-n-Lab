@@ -45,8 +45,7 @@ namespace Maze
                     }
                     else if (m_Iterations != null && m_Iterations.Count == 0)
                     {
-                        m_IsFinished = true;
-                        GameManager.IsReadyToReload = true;
+                        GameManager.IsReadyToReload = m_IsFinished = true;
 
                         Vector2Int startPos = GameManager.MinimalPath.ElementAt(0).Position;
                         GameManager.SelectedPath.Push(m_Grid[startPos.x, startPos.y]);

@@ -57,5 +57,10 @@ namespace Maze
             Position = model.Position;
             Type = model.Type;
         }
+
+        public override string ToString()
+        {
+            return $"Cell[{Position.x},{Position.y}] is {Type} with {Value} value";
+        }
     }
 }

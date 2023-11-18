@@ -50,6 +50,8 @@ namespace Maze
             UpdateName();
             UpdateValue();
             UpdateType();
+
+            ToggleSelectedObject(false);
         }
 
         /// <summary>
@@ -63,6 +65,13 @@ namespace Maze
             else
                 HideInfo();
         }
+
+        /// <summary>
+        /// Convert to Cell Model.
+        /// </summary>
+        /// <returns></returns>
+        public CellModel ToCellModel()
+            => new CellModel(m_InternalValue, new Vector2Int((int)transform.position.x, (int)transform.position.y), m_InternalType);
 
         public void Selected()
             => ToggleSelectedObject(true);
