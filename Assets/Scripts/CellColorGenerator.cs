@@ -29,5 +29,36 @@ namespace Maze
 
             return m_CellColor[_Value];
         }
+
+        public static Color GetColorByType(ECellType _ECellType)
+        {
+            Color color;
+            switch (_ECellType)
+            {
+                case ECellType.BORDER:
+                    color = Color.black;
+                    break;
+                case ECellType.WALL:
+                    color = Color.black;
+                    break;
+                case ECellType.START:
+                    color = Color.green;
+                    break;
+                case ECellType.END:
+                    color = Color.red;
+                    break;
+                case ECellType.EMPTY:
+                    color = Color.white;
+                    break;
+                case ECellType.PATH:
+                    color = Color.white;
+                    break;
+                default:
+                    color = Color.white;
+                    break;
+            }
+
+            return color;
+        }
     }
 }

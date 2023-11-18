@@ -1,9 +1,13 @@
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
+namespace GameControllers
 {
-    private void Start()
+    public class CameraController : MonoBehaviour
     {
-        transform.position = new Vector3(GameManager.MazeSize.x / 2, GameManager.MazeSize.y / 2, -GameManager.MazeSize.y);
+        private void Start()
+        {
+            transform.position = new Vector3(GameManager.MazeSize.x / 2f, Mathf.Floor(GameManager.MazeSize.y / 2f), -1f);
+            Camera.main.orthographicSize = GameManager.MazeSize.y / 2f;
+        }
     }
 }
