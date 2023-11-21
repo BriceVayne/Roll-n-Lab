@@ -1,5 +1,6 @@
 using Extension;
 using Maze;
+using Patterns;
 using System.Linq;
 using UnityEngine;
 

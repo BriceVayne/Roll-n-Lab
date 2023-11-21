@@ -1,4 +1,5 @@
 using Maze;
+using Patterns;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,11 +10,15 @@ public class GameManager : Singleton<GameManager>
     public delegate void GameWinDelegate();
     public delegate void GameOverDelegate();
     public delegate void GameReloadDelegate();
+    public delegate void CellCreatedDelegate(CellModel cell);
+    public delegate void CellUpdateDelegate(CellModel cell);
 
     public static GenerationFinishedDelegate OnGenerationFinished;
     public static GameWinDelegate OnGameWin;
     public static GameOverDelegate OnGameOver;
     public static GameReloadDelegate OnGameReload;
+    public static CellCreatedDelegate OnCellCreated;
+    public static CellUpdateDelegate OnCellUpdated;
 
     public static bool IsReadyToReload { get; set; }
     public static Vector2Int MazeSize { get; private set; }
