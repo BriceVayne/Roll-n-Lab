@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5160469398134087104}
   - component: {fileID: 2807963875249425963}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ColorLayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,4 +46,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Prefab: {fileID: 8023268477779394337, guid: 5249be9f538b7874a8a9f8050a549e7b,
     type: 3}
-  m_ZOffset: 0.1

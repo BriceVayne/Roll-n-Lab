@@ -5,7 +5,7 @@ namespace Layers
     [Serializable]
     public enum ELayerType
     {
-        GAME,
+        GRID,
         COLOR,
         POSITION,
         VALUE,

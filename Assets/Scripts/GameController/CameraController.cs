@@ -1,3 +1,4 @@
+using Maze;
 using UnityEngine;
 
 namespace GameControllers
@@ -6,8 +7,9 @@ namespace GameControllers
     {
         private void Start()
         {
-            transform.position = new Vector3(GameManager.MazeSize.x / 2f, Mathf.Floor(GameManager.MazeSize.y / 2f), -1f);
-            Camera.main.orthographicSize = GameManager.MazeSize.y / 2f;
+            var mazeSize = GridManager.Instance.MazeSize;
+            transform.position = new Vector3(mazeSize.x / 2f, Mathf.Floor(mazeSize.y / 2f), -1f);
+            Camera.main.orthographicSize = mazeSize.y / 2f;
         }
     }
 }

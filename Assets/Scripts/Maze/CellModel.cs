@@ -3,19 +3,6 @@ using UnityEngine;
 namespace Maze
 {
     /// <summary>
-    /// The cell type list
-    /// </summary>
-    public enum ECellType
-    {
-        BORDER,
-        WALL,
-        START,
-        PATH,
-        END,
-        EMPTY
-    }
-
-    /// <summary>
     /// Model data to maze cell
     /// </summary>
     public class CellModel
@@ -57,6 +44,9 @@ namespace Maze
             Position = model.Position;
             Type = model.Type;
         }
+
+        public Vector3 GetPosition()
+           => new Vector3(Position.x, Position.y, 0);
 
         public override string ToString()
         {

@@ -1,24 +1,23 @@
 using Maze;
-using TMPro;
 using UnityEngine;
 
 namespace Layers
 {
-    public class TextItem : LayerItem
+    public class ImageItem : LayerItem
     {
-        [SerializeField] protected TMP_Text m_Text;
+        [SerializeField] protected SpriteRenderer m_Sprite;
 
         public override void InitializeItem(CellModel _Cell)
         {
             transform.position = _Cell.GetPosition();
             name = $"{_Cell.Type} [{_Cell.Position.x},{_Cell.Position.y}]";
 
-            SetText(_Cell);
+            SetSprite(_Cell);
         }
 
         public override void UpdateItem(CellModel _Cell)
-            => SetText(_Cell);
+            => SetSprite(_Cell);
 
-        protected virtual void SetText(CellModel _Cell) { }
+        protected virtual void SetSprite(CellModel _Cell) { }
     }
 }

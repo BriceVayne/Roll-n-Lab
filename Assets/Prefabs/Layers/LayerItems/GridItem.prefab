@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 4597626648417474502}
   - component: {fileID: 9167797995271444411}
   - component: {fileID: 2476432907498246365}
-  m_Layer: 0
-  m_Name: GameItem
+  m_Layer: 6
+  m_Name: GridItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79,7 +79,7 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 0
+  m_DrawMode: 1
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
@@ -99,3 +99,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: 9167797995271444411}
+  m_WallSprite: {fileID: 21300000, guid: 4c87e3c52ebf42f499ba2d3af05b8c82, type: 3}
+  m_PathSprite: {fileID: 21300000, guid: cecb8c07da7ea2f4188edb74967b38b2, type: 3}

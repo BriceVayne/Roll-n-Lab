@@ -11,10 +11,15 @@ namespace Patterns
 
         private static T CreateSingleton()
         {
-            var ownerObject = new GameObject($"{typeof(T).Name} (singleton)");
-            var instance = ownerObject.AddComponent<T>();
-            DontDestroyOnLoad(ownerObject);
-            return instance;
+            var anyInstance = FindAnyObjectByType<T>();
+            if (anyInstance == null)
+            {
+                var ownerObject = new GameObject($"{typeof(T).Name} (singleton)");
+                anyInstance = ownerObject.AddComponent<T>();
+            }
+            
+            DontDestroyOnLoad(anyInstance);
+            return anyInstance;
         }
     }
 }

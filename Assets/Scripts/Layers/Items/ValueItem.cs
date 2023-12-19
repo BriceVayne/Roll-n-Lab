@@ -1,7 +1,10 @@
 using Maze;
 
-public class ValueItem : TextItem
+namespace Layers
 {
-    protected override void SetText(CellModel cell)
-       => m_Text.text = $"{cell.Value}";
+    public class ValueItem : TextItem
+    {
+        protected override void SetText(CellModel cell)
+           => m_Text.text = $"{cell.Value}";
+    }
 }

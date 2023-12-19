@@ -23,13 +23,13 @@ namespace Layers
 
         private void Awake()
         {
-            m_Items = new LayerItem[GameManager.MazeSize.x, GameManager.MazeSize.y];
+            m_Items = new LayerItem[GridManager.Instance.MazeSize.x, GridManager.Instance.MazeSize.y];
         }
 
         private void Start()
         {
-            GameManager.OnCellCreated += OnCellCreate;
-            GameManager.OnCellUpdated += OnCellUpdate;
+            GridManager.OnCellCreated += OnCellCreate;
+            GridManager.OnCellUpdated += OnCellUpdate;
         }
     }
 }
