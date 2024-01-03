@@ -5,19 +5,16 @@ using System.Collections.Generic;
 
 namespace Managers
 {
-    public class LevelManager : Singleton<LevelManager>, IManager
+    public class LevelManager : Manager<LevelManager>
     {
-        public static Action OnGameWin;
-        public static Action OnGameOver;
-        public static Action OnGameReload;
+        public Action OnGameWin;
+        public Action OnGameOver;
+        public Action OnGameReload;
 
-        public bool IsReady { get; private set; }
-        public static Stack<TwoDimensionCell> SelectedPath { get; private set; }
+        public Stack<TwoDimensionCell> SelectedPath { get; private set; }
 
-        private void Awake()
+        protected override void AwakeBehaviour()
         {
-            IsReady = false;
-
             OnGameWin = null;
             OnGameOver = null;
             OnGameReload = null;
@@ -25,9 +22,8 @@ namespace Managers
             SelectedPath = new Stack<TwoDimensionCell>();
         }
 
-        private void Start()
+        protected override void StartBehaviour()
         {
-            IsReady = true;
         }
     }
 }

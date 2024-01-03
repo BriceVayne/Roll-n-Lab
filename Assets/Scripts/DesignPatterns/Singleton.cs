@@ -19,6 +19,7 @@ namespace Patterns
             }
             
             DontDestroyOnLoad(anyInstance);
+
             return anyInstance;
         }
     }

@@ -20,7 +20,7 @@ namespace Maze
 
         private void Start()
         {
-            LevelManager.OnGameReload += CreateMaze;
+            LevelManager.Instance.OnGameReload += CreateMaze;
             CreateMaze();
         }
 
@@ -42,8 +42,8 @@ namespace Maze
             m_CellBlocks = new List<List<CellModel>>();
             m_Number = 1;
 
-            GridManager.MinimalPath.Clear();
-            LevelManager.SelectedPath.Clear();
+            GridManager.Instance.MinimalPath.Clear();
+            LevelManager.Instance.SelectedPath.Clear();
         }
 
         private void GenerateGrid()
@@ -85,7 +85,7 @@ namespace Maze
         private void DeterminePath()
         {
             /// Start
-            GridManager.MinimalPath.Add(m_CellBlocks[0][0]);
+            GridManager.Instance.MinimalPath.Add(m_CellBlocks[0][0]);
 
             /// Middle
             //TODO: define a better number
@@ -96,20 +96,20 @@ namespace Maze
             //}
 
             /// End
-            GridManager.MinimalPath.Add(m_CellBlocks[m_CellBlocks.Count - 1][0]);
+            GridManager.Instance.MinimalPath.Add(m_CellBlocks[m_CellBlocks.Count - 1][0]);
         }
 
         private void ResolvedMaze()
         {
-            Queue<CellModel[,]> iterations = new Queue<CellModel[,]>();
-            HashSet<CellModel> minimalPath = GridManager.MinimalPath;
+            List<CellModel[,]> iterations = new List<CellModel[,]>();
+            HashSet<CellModel> minimalPath = GridManager.Instance.MinimalPath;
             bool wasHorizontal = false;
             int nbWallToBreak = 10; //TODO: define a better number
             int wallBreak = 0;
 #if UNITY_EDITOR
             int changedCount = 0;
 #endif
-            iterations.Enqueue(m_Maze.Copy());
+            iterations.Add(m_Maze.Copy());
 
 #if UNITY_EDITOR
             Stopwatch stopwatch = new Stopwatch();
@@ -209,7 +209,7 @@ namespace Maze
                         int percentage = 100 / (int)GridManager.Instance.GenerationIntervalPercentage;
                         bool saveChanged = changedCount % percentage == 0;
                         if (changedCount % percentage == 0)
-                            iterations.Enqueue(m_Maze.Copy());
+                            iterations.Add(m_Maze.Copy());
                     }
 #if UNITY_EDITOR
                     changedCount++;
@@ -260,15 +260,15 @@ namespace Maze
             Debug.Log($"Resolution time: {stopwatch.ElapsedMilliseconds} milliseconds");
 #endif
 
-            iterations.Enqueue(m_Maze.Copy());
+            iterations.Add(m_Maze.Copy());
 
-            GridManager.OnGenerationFinished.Invoke(iterations);
+            GridManager.Instance.SnapShots = iterations;
         }
 
         private bool IsNotResolved()
         {
             bool hasBlockUnresolved = m_CellBlocks.Count != 1;
-            bool pathExist = m_CellBlocks.Any(innerList => GridManager.MinimalPath.All(cellModel => innerList.Contains(cellModel)));
+            bool pathExist = m_CellBlocks.Any(innerList => GridManager.Instance.MinimalPath.All(cellModel => innerList.Contains(cellModel)));
 
             return hasBlockUnresolved || !pathExist;
         }

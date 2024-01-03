@@ -8,17 +8,17 @@ namespace Layers
         [SerializeField] private LayerItem m_Prefab;
         private LayerItem[,] m_Items;
 
-        private void OnCellCreate(CellModel cell) 
+        private void OnCellCreate(CellModel _Cell) 
         {
             LayerItem item = Instantiate(m_Prefab, transform);
-            item.InitializeItem(cell);
+            item.InitializeItem(_Cell);
 
-            m_Items[cell.Position.x, cell.Position.y] = item;
+            m_Items[_Cell.Position.x, _Cell.Position.y] = item;
         }
 
-        private void OnCellUpdate(CellModel cell) 
+        private void OnCellUpdate(CellModel _Cell) 
         { 
-            m_Items[cell.Position.x, cell.Position.y].UpdateItem(cell); 
+            m_Items[_Cell.Position.x, _Cell.Position.y].UpdateItem(_Cell); 
         }
 
         private void Awake()
@@ -28,8 +28,8 @@ namespace Layers
 
         private void Start()
         {
-            GridManager.OnCellCreated += OnCellCreate;
-            GridManager.OnCellUpdated += OnCellUpdate;
+            GridManager.Instance.OnCellCreated += OnCellCreate;
+            GridManager.Instance.OnCellUpdated += OnCellUpdate;
         }
     }
 }

@@ -10,11 +10,12 @@ namespace Layers
         [SerializeField] private TMP_Text m_Label;
         private ELayerType m_InternalLayer;
 
-        public void Bind(ELayerType _ELayer)
+        public void Bind(ELayerType _ELayer, bool _IsEnable)
         {
             m_InternalLayer = _ELayer;
             m_Label.text = _ELayer.ToString();
             m_Toggle.onValueChanged.AddListener(OnToggle);
+            m_Toggle.isOn = _IsEnable;
         }
 
         public void Unbind()
@@ -25,6 +26,6 @@ namespace Layers
         }
 
         private void OnToggle(bool _IsOn)
-            => LayerManager.OnToggleLayer.Invoke(m_InternalLayer, _IsOn);
+            => LayerManager.Instance.OnToggleLayer.Invoke(m_InternalLayer, _IsOn);
     }
 }

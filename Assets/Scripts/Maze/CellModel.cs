@@ -46,7 +46,7 @@ namespace Maze
         }
 
         public Vector3 GetPosition()
-           => new Vector3(Position.x, Position.y, 0);
+           => new Vector3(Position.x, Position.y, 0f);
 
         public override string ToString()
         {

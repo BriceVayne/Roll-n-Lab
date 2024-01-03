@@ -131,4 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Content: {fileID: 988783984117573940}
-  m_Prefab: {fileID: 241551464944984358, guid: 3582cff4c3fd4784e885af34d454e6a4, type: 3}
+  m_TogglePrefab: {fileID: 241551464944984358, guid: 3582cff4c3fd4784e885af34d454e6a4,
+    type: 3}
+  m_SliderPrefab: {fileID: 6271929756072852953, guid: 253719d86d519604992f3e200bf6c59e,
+    type: 3}

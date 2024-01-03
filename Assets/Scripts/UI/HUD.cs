@@ -11,9 +11,9 @@ namespace UserInterfaces
 
         private void Start()
         {
-            LevelManager.OnGameWin += EnableWinHUD;
-            LevelManager.OnGameOver += DisableWinHUD;
-            LevelManager.OnGameReload += DisableWinHUD;
+            LevelManager.Instance.OnGameWin += EnableWinHUD;
+            LevelManager.Instance.OnGameOver += DisableWinHUD;
+            LevelManager.Instance.OnGameReload += DisableWinHUD;
 
             DisableWinHUD();
         }

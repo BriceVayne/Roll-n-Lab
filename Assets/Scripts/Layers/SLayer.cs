@@ -8,5 +8,6 @@ namespace Layers
         public string Name;
         public ELayerType Type;
         public Layer Prefab;
+        public bool IsEnable;
     }
 }

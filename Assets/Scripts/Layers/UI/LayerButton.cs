@@ -14,13 +14,13 @@ namespace Layers
             m_Button.onClick.AddListener(OnClick);
             m_IntervalState = false;
 
-            LayerManager.OnOpenLayer += m_Panel.SetActive;
+            LayerManager.Instance.OnOpenLayer += m_Panel.SetActive;
         }
 
         private void OnClick()
         {
             m_IntervalState = !m_IntervalState;
-            LayerManager.OnOpenLayer.Invoke(m_IntervalState);
+            LayerManager.Instance.OnOpenLayer.Invoke(m_IntervalState);
         }
     }
 }

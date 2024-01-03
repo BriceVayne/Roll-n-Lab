@@ -399,21 +399,26 @@ MonoBehaviour:
     Type: 0
     Prefab: {fileID: 2807963875249425963, guid: d2d308a85cc2c8949834b7933f8512b3,
       type: 3}
+    IsEnable: 1
   - Name: ColorLayer
     Type: 1
     Prefab: {fileID: 2807963875249425963, guid: 79e9383c668d78f4d920c27c00207131,
       type: 3}
+    IsEnable: 1
   - Name: PositionLayer
     Type: 2
     Prefab: {fileID: 2272447215445482438, guid: bbbacd7dddb279e4bad4f69b84c7a658,
       type: 3}
+    IsEnable: 1
   - Name: ValueLayer
     Type: 3
     Prefab: {fileID: 160140550475226063, guid: 40035a6e74d5d544ebd9c523c4b59bcf, type: 3}
+    IsEnable: 1
   - Name: TypeLayer
     Type: 4
     Prefab: {fileID: 4117698512455812807, guid: 83e02093deb0a584d924ac0916846910,
       type: 3}
+    IsEnable: 1
 --- !u!1 &407682314
 GameObject:
   m_ObjectHideFlags: 0
@@ -1111,8 +1116,8 @@ Camera:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1422,32 +1427,32 @@ PrefabInstance:
     - target: {fileID: 988783984117573940, guid: 7d2dd0feff588bf41878ae41b002b1e9,
         type: 3}
       propertyPath: m_Pivot.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 988783984117573940, guid: 7d2dd0feff588bf41878ae41b002b1e9,
         type: 3}
       propertyPath: m_Pivot.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 988783984117573940, guid: 7d2dd0feff588bf41878ae41b002b1e9,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 988783984117573940, guid: 7d2dd0feff588bf41878ae41b002b1e9,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 988783984117573940, guid: 7d2dd0feff588bf41878ae41b002b1e9,
         type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 988783984117573940, guid: 7d2dd0feff588bf41878ae41b002b1e9,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 988783984117573940, guid: 7d2dd0feff588bf41878ae41b002b1e9,
         type: 3}
@@ -1497,12 +1502,12 @@ PrefabInstance:
     - target: {fileID: 988783984117573940, guid: 7d2dd0feff588bf41878ae41b002b1e9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 988783984117573940, guid: 7d2dd0feff588bf41878ae41b002b1e9,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -80
       objectReference: {fileID: 0}
     - target: {fileID: 988783984117573940, guid: 7d2dd0feff588bf41878ae41b002b1e9,
         type: 3}

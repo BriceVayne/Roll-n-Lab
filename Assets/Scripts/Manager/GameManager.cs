@@ -2,18 +2,14 @@ using Patterns;
 
 namespace Managers
 {
-    public class GameManager : Singleton<GameManager>, IManager
+    public class GameManager : Manager<GameManager>
     {
-        public bool IsReady { get; private set; }
-
-        private void Awake()
+        protected override void AwakeBehaviour()
         {
-            IsReady = false;
         }
 
-        private void Start()
+        protected override void StartBehaviour()
         {
-            IsReady = true;
         }
     }
 }

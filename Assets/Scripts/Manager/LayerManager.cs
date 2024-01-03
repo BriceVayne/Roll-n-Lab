@@ -1,22 +1,19 @@
+using Maze;
 using Patterns;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IManager
-{
-    public bool IsReady { get; }
-}
-
 namespace Layers
 {
-    public class LayerManager : Singleton<LayerManager>, IManager
+    public class LayerManager : Manager<LayerManager>
     {
-        public static Action<bool> OnOpenLayer;
-        public static Action<ELayerType> OnCreateLayer;
-        public static Action<ELayerType, bool> OnToggleLayer;
-        
-        public bool IsReady { get; private set; }
+        public Action<bool> OnOpenLayer;
+        public Action<ELayerType, bool> OnCreateLayer;
+        public Action<ELayerType, bool> OnToggleLayer;
+        public Action<int,int,int> OnProcessEnd;
+        public Action<float> OnSliderChanged;
 
         [SerializeField] private Transform layerContent;
         [SerializeField] private List<SLayer> m_Layers = new List<SLayer>();
@@ -25,26 +22,53 @@ namespace Layers
 
         private Dictionary<ELayerType, Layer> m_InternalPanelLayers;
 
-        private void Awake()
-        {
-            IsReady = false;
+        private float m_CurrentTime;
+        private float m_Time;
+        private int m_Index;
+        private List<CellModel[,]> m_SnapShots;
+        private bool m_StopUpdate;
 
+        protected override void AwakeBehaviour()
+        {
             OnOpenLayer = null;
             OnCreateLayer = null;
             OnToggleLayer = null;
+            OnSliderChanged = null;
 
             OnToggleLayer += ToggleALayer;
+            OnSliderChanged += ForceGridToUpdate;
 
             m_InternalPanelLayers = new Dictionary<ELayerType, Layer>();
 
-            Debug.Log("Layer Manager Awake");
+            m_CurrentTime = 0f;
+            m_Time = 0.01f;
+            m_Index = 0;
         }
 
-        private void Start()
+        protected override void StartBehaviour()
         {
             InitializeLayers();
 
-            IsReady = true;
+            StartCoroutine(WaitForSnapShot());
+        }
+
+        private void FixedUpdate()
+        {
+            if (m_Index >= m_SnapShots.Count-1)
+            {
+                OnProcessEnd.Invoke(0, m_SnapShots.Count-1, m_Index);
+                enabled = false;
+            }
+
+            m_CurrentTime += Time.deltaTime;
+            if(m_CurrentTime >= m_Time)
+            {
+                m_Index++;
+    
+                UpdateGrid(m_SnapShots[m_Index]);
+
+                m_CurrentTime = 0f;
+            }
         }
 
         private void ToggleALayer(ELayerType _ELayer, bool _IsOn)
@@ -52,6 +76,9 @@ namespace Layers
             if (m_InternalPanelLayers.TryGetValue(_ELayer, out var panel))
                 panel.gameObject.SetActive(_IsOn);
         }
+
+        private void ForceGridToUpdate(float _Index)
+            => UpdateGrid(m_SnapShots[(int)_Index]);
 
         private void InitializeLayers()
         {
@@ -66,10 +93,34 @@ namespace Layers
 
                 m_InternalPanelLayers[layer.Type] = panel;
 
-                OnCreateLayer.Invoke(layer.Type);
+                OnCreateLayer.Invoke(layer.Type, layer.IsEnable);
 
                 i++;
             }
+        }
+
+        private IEnumerator WaitForSnapShot()
+        {
+            yield return new WaitUntil(() => GridManager.Instance.SnapShots == null);
+
+            m_SnapShots = GridManager.Instance.SnapShots;
+            m_Index = 0;
+
+            CreateGrid(m_SnapShots[0]);
+        }
+
+        private void CreateGrid(CellModel[,] _SnapShot)
+        {
+            for (int x = 0; x < _SnapShot.GetLength(0); x++)
+                for (int y = 0; y < _SnapShot.GetLength(1); y++)
+                    GridManager.Instance.OnCellCreated.Invoke(_SnapShot[x, y]);
+        }
+
+        private void UpdateGrid(CellModel[,] _SnapShot)
+        {
+            for (int x = 0; x < _SnapShot.GetLength(0); x++)
+                for (int y = 0; y < _SnapShot.GetLength(1); y++)
+                    GridManager.Instance.OnCellUpdated.Invoke(_SnapShot[x, y]);
         }
     }
 }
