@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Maze
 {
-    public class GridManager : Manager<GridManager>
+    public class GridManager : Singleton<GridManager>
     {
         public Action<CellModel> OnCellCreated;
         public Action<CellModel> OnCellUpdated;
@@ -21,7 +21,7 @@ namespace Maze
         [SerializeField] private Vector2Int m_Size = new Vector2Int(33, 33);
         [SerializeField] private EIntervalPercentage m_GenerationIntervalPercentage = EIntervalPercentage.ALL;
 
-        protected override void AwakeBehaviour()
+        private void Awake()
         {
             OnCellCreated = null;
             OnCellUpdated = null;
@@ -30,7 +30,7 @@ namespace Maze
             MinimalPath = new HashSet<CellModel>();
         }
 
-        protected override void StartBehaviour()
+        private void Start()
         {
         }
     }

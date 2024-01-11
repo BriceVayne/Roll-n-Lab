@@ -409,16 +409,16 @@ MonoBehaviour:
     Type: 2
     Prefab: {fileID: 2272447215445482438, guid: bbbacd7dddb279e4bad4f69b84c7a658,
       type: 3}
-    IsEnable: 1
+    IsEnable: 0
   - Name: ValueLayer
     Type: 3
     Prefab: {fileID: 160140550475226063, guid: 40035a6e74d5d544ebd9c523c4b59bcf, type: 3}
-    IsEnable: 1
+    IsEnable: 0
   - Name: TypeLayer
     Type: 4
     Prefab: {fileID: 4117698512455812807, guid: 83e02093deb0a584d924ac0916846910,
       type: 3}
-    IsEnable: 1
+    IsEnable: 0
 --- !u!1 &407682314
 GameObject:
   m_ObjectHideFlags: 0
@@ -1346,7 +1346,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1588404298}
-  - component: {fileID: 1588404299}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -1373,18 +1372,6 @@ Transform:
   - {fileID: 394143017}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1588404299
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1588404297}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afd8f471f2410e946bf76edc49a2fa54, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1631769673
 GameObject:
   m_ObjectHideFlags: 0
@@ -1414,6 +1401,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af0ebee36f31b57438c91064dd803305, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_GameMode: 2
 --- !u!4 &1631769675
 Transform:
   m_ObjectHideFlags: 0

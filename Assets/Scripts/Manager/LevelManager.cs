@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Managers
 {
-    public class LevelManager : Manager<LevelManager>
+    public class LevelManager : Singleton<LevelManager>
     {
         public Action OnGameWin;
         public Action OnGameOver;
@@ -13,7 +13,7 @@ namespace Managers
 
         public Stack<TwoDimensionCell> SelectedPath { get; private set; }
 
-        protected override void AwakeBehaviour()
+        private void Awake()
         {
             OnGameWin = null;
             OnGameOver = null;
@@ -22,7 +22,7 @@ namespace Managers
             SelectedPath = new Stack<TwoDimensionCell>();
         }
 
-        protected override void StartBehaviour()
+        private void Start()
         {
         }
     }

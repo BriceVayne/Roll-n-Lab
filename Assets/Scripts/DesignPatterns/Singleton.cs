@@ -14,7 +14,7 @@ namespace Patterns
             var anyInstance = FindAnyObjectByType<T>();
             if (anyInstance == null)
             {
-                var ownerObject = new GameObject($"{typeof(T).Name} (singleton)");
+                var ownerObject = new GameObject($"{typeof(T).Name} [SINGLETON]");
                 anyInstance = ownerObject.AddComponent<T>();
             }
             

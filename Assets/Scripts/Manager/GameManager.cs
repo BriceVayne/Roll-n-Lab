@@ -1,15 +1,21 @@
 using Patterns;
+using System;
+using UnityEngine;
 
 namespace Managers
 {
-    public class GameManager : Manager<GameManager>
+    public class GameManager : Singleton<GameManager>
     {
-        protected override void AwakeBehaviour()
-        {
-        }
+        [SerializeField] private GameMode m_GameMode;
+        public GameMode Mode {  get { return m_GameMode; } private set { m_GameMode = value; } }
+    }
 
-        protected override void StartBehaviour()
-        {
-        }
+    [Serializable]
+    public enum GameMode
+    {
+        GAME_EDITOR,
+        GAME_RUNTIME,
+        DEBUG_EDITOR,
+        DEBUG_RUNTIME,
     }
 }

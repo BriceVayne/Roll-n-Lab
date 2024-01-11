@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Layers
 {
-    public class LayerManager : Manager<LayerManager>
+    public class LayerManager : Singleton<LayerManager>
     {
         public Action<bool> OnOpenLayer;
         public Action<ELayerType, bool> OnCreateLayer;
@@ -28,7 +28,7 @@ namespace Layers
         private List<CellModel[,]> m_SnapShots;
         private bool m_StopUpdate;
 
-        protected override void AwakeBehaviour()
+        private void Awake()
         {
             OnOpenLayer = null;
             OnCreateLayer = null;
@@ -45,7 +45,7 @@ namespace Layers
             m_Index = 0;
         }
 
-        protected override void StartBehaviour()
+        private void Start()
         {
             InitializeLayers();
 
@@ -54,9 +54,9 @@ namespace Layers
 
         private void FixedUpdate()
         {
-            if (m_Index >= m_SnapShots.Count-1)
+            if (m_Index >= m_SnapShots.Count)
             {
-                OnProcessEnd.Invoke(0, m_SnapShots.Count-1, m_Index);
+                OnProcessEnd.Invoke(0, m_SnapShots.Count, m_Index);
                 enabled = false;
             }
 
