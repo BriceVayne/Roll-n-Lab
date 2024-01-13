@@ -1,11 +1,12 @@
+using Maze;
 using Patterns;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Maze
+namespace Service
 {
-    public class GridManager : Singleton<GridManager>
+    internal sealed class GridService : Singleton<GridService>
     {
         public Action<CellModel> OnCellCreated;
         public Action<CellModel> OnCellUpdated;
@@ -28,10 +29,6 @@ namespace Maze
             OnCellDeleted = null;
 
             MinimalPath = new HashSet<CellModel>();
-        }
-
-        private void Start()
-        {
         }
     }
 }

@@ -1,4 +1,4 @@
-using Managers;
+using Services;
 using TMPro;
 using UnityEngine;
 
@@ -11,9 +11,9 @@ namespace UserInterfaces
 
         private void Start()
         {
-            LevelManager.Instance.OnGameWin += EnableWinHUD;
-            LevelManager.Instance.OnGameOver += DisableWinHUD;
-            LevelManager.Instance.OnGameReload += DisableWinHUD;
+            LevelService.Instance.OnLevelFinished += EnableWinHUD;
+            LevelService.Instance.OnLevelOver += DisableWinHUD;
+            LevelService.Instance.OnLevelReload += DisableWinHUD;
 
             DisableWinHUD();
         }

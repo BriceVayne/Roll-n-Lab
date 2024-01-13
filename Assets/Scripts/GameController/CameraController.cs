@@ -1,13 +1,13 @@
-using Maze;
+using Service;
 using UnityEngine;
 
 namespace GameControllers
 {
-    public class CameraController : MonoBehaviour
+    internal sealed class CameraController : MonoBehaviour
     {
         private void Start()
         {
-            var mazeSize = GridManager.Instance.MazeSize;
+            var mazeSize = GridService.Instance.MazeSize;
             transform.position = new Vector3(mazeSize.x / 2f, Mathf.Floor(mazeSize.y / 2f), -1f);
             Camera.main.orthographicSize = mazeSize.y / 2f;
         }

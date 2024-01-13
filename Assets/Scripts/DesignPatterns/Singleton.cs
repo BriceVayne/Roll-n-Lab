@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Patterns
 {
-    public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
+    internal abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         public static T Instance => LazyInstance.Value;
 

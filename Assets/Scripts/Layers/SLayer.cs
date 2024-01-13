@@ -3,7 +3,7 @@ using System;
 namespace Layers
 {
     [Serializable]
-    public struct SLayer
+    internal struct SLayer
     {
         public string Name;
         public ELayerType Type;

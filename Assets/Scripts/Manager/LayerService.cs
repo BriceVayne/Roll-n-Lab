@@ -1,3 +1,4 @@
+using Layers;
 using Maze;
 using Patterns;
 using System;
@@ -5,9 +6,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Layers
+namespace Service
 {
-    public class LayerManager : Singleton<LayerManager>
+    internal sealed class LayerService : Singleton<LayerService>
     {
         public Action<bool> OnOpenLayer;
         public Action<ELayerType, bool> OnCreateLayer;
@@ -101,9 +102,9 @@ namespace Layers
 
         private IEnumerator WaitForSnapShot()
         {
-            yield return new WaitUntil(() => GridManager.Instance.SnapShots == null);
+            yield return new WaitUntil(() => GridService.Instance.SnapShots == null);
 
-            m_SnapShots = GridManager.Instance.SnapShots;
+            m_SnapShots = GridService.Instance.SnapShots;
             m_Index = 0;
 
             CreateGrid(m_SnapShots[0]);
@@ -113,14 +114,14 @@ namespace Layers
         {
             for (int x = 0; x < _SnapShot.GetLength(0); x++)
                 for (int y = 0; y < _SnapShot.GetLength(1); y++)
-                    GridManager.Instance.OnCellCreated.Invoke(_SnapShot[x, y]);
+                    GridService.Instance.OnCellCreated.Invoke(_SnapShot[x, y]);
         }
 
         private void UpdateGrid(CellModel[,] _SnapShot)
         {
             for (int x = 0; x < _SnapShot.GetLength(0); x++)
                 for (int y = 0; y < _SnapShot.GetLength(1); y++)
-                    GridManager.Instance.OnCellUpdated.Invoke(_SnapShot[x, y]);
+                    GridService.Instance.OnCellUpdated.Invoke(_SnapShot[x, y]);
         }
     }
 }

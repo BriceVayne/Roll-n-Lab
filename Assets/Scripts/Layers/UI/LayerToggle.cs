@@ -1,10 +1,11 @@
+using Service;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Layers
 {
-    public class LayerToggle : MonoBehaviour
+    internal sealed class LayerToggle : MonoBehaviour
     {
         [SerializeField] private Toggle m_Toggle;
         [SerializeField] private TMP_Text m_Label;
@@ -26,6 +27,6 @@ namespace Layers
         }
 
         private void OnToggle(bool _IsOn)
-            => LayerManager.Instance.OnToggleLayer.Invoke(m_InternalLayer, _IsOn);
+            => LayerService.Instance.OnToggleLayer.Invoke(m_InternalLayer, _IsOn);
     }
 }

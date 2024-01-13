@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace GameControllers
 {
-    public class PlayerController : Singleton<PlayerController>
+    internal sealed class PlayerController : Singleton<PlayerController>
     {
         private float m_RayDistance = 1f;
 

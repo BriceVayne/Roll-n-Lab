@@ -1,12 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+using Service;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Layers
 {
-    public class LayerTimeline : MonoBehaviour
+    internal sealed class LayerTimeline : MonoBehaviour
     {
         [SerializeField] private TMP_Text m_MinLabel;
         [SerializeField] private TMP_Text m_MaxLabel;
@@ -27,7 +26,7 @@ namespace Layers
             m_Slider.minValue = _Min;
             m_Slider.maxValue = _Max;
             m_Slider.value = _Current;
-            m_Slider.onValueChanged.AddListener(LayerManager.Instance.OnSliderChanged.Invoke);
+            m_Slider.onValueChanged.AddListener(LayerService.Instance.OnSliderChanged.Invoke);
         }
 
         public void Unbind()
@@ -39,7 +38,7 @@ namespace Layers
             m_Slider.minValue = 0;
             m_Slider.maxValue = 1;
             m_Slider.value = 0;
-            m_Slider.onValueChanged.RemoveListener(LayerManager.Instance.OnSliderChanged.Invoke);
+            m_Slider.onValueChanged.RemoveListener(LayerService.Instance.OnSliderChanged.Invoke);
         }
     }
 }

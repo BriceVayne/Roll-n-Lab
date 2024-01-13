@@ -123,7 +123,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &498334374
+--- !u!1 &1745933510
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -131,54 +131,36 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 498334376}
-  - component: {fileID: 498334375}
+  - component: {fileID: 1745933512}
+  - component: {fileID: 1745933511}
   m_Layer: 0
-  m_Name: SceneOrchestrator
+  m_Name: LevelService
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &498334375
+--- !u!114 &1745933511
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 498334374}
+  m_GameObject: {fileID: 1745933510}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f1099dd4a3a5c44c95f903c72341356, type: 3}
+  m_Script: {fileID: 11500000, guid: f3cfc6b6ec374a547abad30e5c0862b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Scenes:
-  - Name: Services
-    SceneOrder: 0
-    Scenes:
-    - {fileID: 102900000, guid: 4a55eec06f1ca324f9386529050c7bcc, type: 3}
-    - {fileID: 102900000, guid: aabeb056dd630bc449cc5942b3f73486, type: 3}
-    - {fileID: 102900000, guid: 47f5e7411c82af946b78662b0907f077, type: 3}
-    - {fileID: 102900000, guid: 92a4d478fb34d6e4cb385e03881a8c47, type: 3}
-  - Name: Menu
-    SceneOrder: 1
-    Scenes: []
-  - Name: Game
-    SceneOrder: 2
-    Scenes:
-    - {fileID: 102900000, guid: 0be2ad17317625f4595bf65afb1eb675, type: 3}
-    - {fileID: 102900000, guid: c850ee8c3b14cc8459e7e186857cf567, type: 3}
-    - {fileID: 102900000, guid: 61d874c5eb2598d4fa7dfec89b1ab46d, type: 3}
-  m_SceneOrder: 000000000100000002000000
---- !u!4 &498334376
+--- !u!4 &1745933512
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 498334374}
+  m_GameObject: {fileID: 1745933510}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -189,4 +171,4 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 498334376}
+  - {fileID: 1745933512}

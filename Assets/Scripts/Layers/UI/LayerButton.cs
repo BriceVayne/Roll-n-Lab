@@ -1,9 +1,10 @@
+using Service;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Layers
 {
-    public class LayerButton : MonoBehaviour
+    internal sealed class LayerButton : MonoBehaviour
     {
         [SerializeField] private Button m_Button;
         [SerializeField] private GameObject m_Panel;
@@ -14,13 +15,13 @@ namespace Layers
             m_Button.onClick.AddListener(OnClick);
             m_IntervalState = false;
 
-            LayerManager.Instance.OnOpenLayer += m_Panel.SetActive;
+            LayerService.Instance.OnOpenLayer += m_Panel.SetActive;
         }
 
         private void OnClick()
         {
             m_IntervalState = !m_IntervalState;
-            LayerManager.Instance.OnOpenLayer.Invoke(m_IntervalState);
+            LayerService.Instance.OnOpenLayer.Invoke(m_IntervalState);
         }
     }
 }

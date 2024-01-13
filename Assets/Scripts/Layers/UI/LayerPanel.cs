@@ -1,10 +1,11 @@
 using Layers;
+using Service;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace UserInterfaces
 {
-    public class LayerPanel : MonoBehaviour
+    internal sealed class LayerPanel : MonoBehaviour
     {
         [SerializeField] private RectTransform m_Content;
         [SerializeField] private LayerToggle m_TogglePrefab;
@@ -21,8 +22,8 @@ namespace UserInterfaces
 
         private void Start()
         {
-            LayerManager.Instance.OnCreateLayer += CreateLayer;
-            LayerManager.Instance.OnProcessEnd += CreateTimeline;
+            LayerService.Instance.OnCreateLayer += CreateLayer;
+            LayerService.Instance.OnProcessEnd += CreateTimeline;
             gameObject.SetActive(false);
         }
 

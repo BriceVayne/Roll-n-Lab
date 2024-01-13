@@ -1,5 +1,6 @@
 using Extension;
-using Managers;
+using Service;
+using Services;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,7 +11,7 @@ using Stopwatch = System.Diagnostics.Stopwatch;
 
 namespace Maze
 {
-    public class GridGenerator : MonoBehaviour
+    internal sealed class GridGenerator : MonoBehaviour
     {
         private Vector2Int m_MazeSize;
         private CellModel[,] m_Maze;
@@ -20,7 +21,7 @@ namespace Maze
 
         private void Start()
         {
-            LevelManager.Instance.OnGameReload += CreateMaze;
+            LevelService.Instance.OnLevelReload += CreateMaze;
             CreateMaze();
         }
 
@@ -36,14 +37,13 @@ namespace Maze
 
         private void ResetData()
         {
-            m_MazeSize = GridManager.Instance.MazeSize;
+            m_MazeSize = GridService.Instance.MazeSize;
             m_Maze = new CellModel[m_MazeSize.x, m_MazeSize.y];
             m_Walls = new List<CellModel>();
             m_CellBlocks = new List<List<CellModel>>();
             m_Number = 1;
 
-            GridManager.Instance.MinimalPath.Clear();
-            LevelManager.Instance.SelectedPath.Clear();
+            GridService.Instance.MinimalPath.Clear();
         }
 
         private void GenerateGrid()
@@ -85,7 +85,7 @@ namespace Maze
         private void DeterminePath()
         {
             /// Start
-            GridManager.Instance.MinimalPath.Add(m_CellBlocks[0][0]);
+            GridService.Instance.MinimalPath.Add(m_CellBlocks[0][0]);
 
             /// Middle
             //TODO: define a better number
@@ -96,13 +96,13 @@ namespace Maze
             //}
 
             /// End
-            GridManager.Instance.MinimalPath.Add(m_CellBlocks[m_CellBlocks.Count - 1][0]);
+            GridService.Instance.MinimalPath.Add(m_CellBlocks[m_CellBlocks.Count - 1][0]);
         }
 
         private void ResolvedMaze()
         {
             List<CellModel[,]> iterations = new List<CellModel[,]>();
-            HashSet<CellModel> minimalPath = GridManager.Instance.MinimalPath;
+            HashSet<CellModel> minimalPath = GridService.Instance.MinimalPath;
             bool wasHorizontal = false;
             int nbWallToBreak = 10; //TODO: define a better number
             int wallBreak = 0;
@@ -204,9 +204,9 @@ namespace Maze
                     m_Walls.Remove(c);
 
                     /// Save iteration from the according percentage
-                    if (GridManager.Instance.GenerationIntervalPercentage != EIntervalPercentage.NONE)
+                    if (GridService.Instance.GenerationIntervalPercentage != EIntervalPercentage.NONE)
                     {
-                        int percentage = 100 / (int)GridManager.Instance.GenerationIntervalPercentage;
+                        int percentage = 100 / (int)GridService.Instance.GenerationIntervalPercentage;
                         bool saveChanged = changedCount % percentage == 0;
                         if (changedCount % percentage == 0)
                             iterations.Add(m_Maze.Copy());
@@ -262,13 +262,13 @@ namespace Maze
 
             iterations.Add(m_Maze.Copy());
 
-            GridManager.Instance.SnapShots = iterations;
+            GridService.Instance.SnapShots = iterations;
         }
 
         private bool IsNotResolved()
         {
             bool hasBlockUnresolved = m_CellBlocks.Count != 1;
-            bool pathExist = m_CellBlocks.Any(innerList => GridManager.Instance.MinimalPath.All(cellModel => innerList.Contains(cellModel)));
+            bool pathExist = m_CellBlocks.Any(innerList => GridService.Instance.MinimalPath.All(cellModel => innerList.Contains(cellModel)));
 
             return hasBlockUnresolved || !pathExist;
         }

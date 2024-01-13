@@ -6,6 +6,27 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Orchestrator.unity
+    guid: b2cd2a05fbe26894c86914e7c77429c5
+  - enabled: 1
+    path: Assets/Scenes/Services/GameService.unity
+    guid: 4a55eec06f1ca324f9386529050c7bcc
+  - enabled: 1
+    path: Assets/Scenes/Services/GridService.unity
+    guid: 47f5e7411c82af946b78662b0907f077
+  - enabled: 1
+    path: Assets/Scenes/Services/LayerService.unity
+    guid: 92a4d478fb34d6e4cb385e03881a8c47
+  - enabled: 1
+    path: Assets/Scenes/Services/LevelService.unity
+    guid: aabeb056dd630bc449cc5942b3f73486
+  - enabled: 1
+    path: Assets/Scenes/Game/GridGenerator.unity
+    guid: 0be2ad17317625f4595bf65afb1eb675
+  - enabled: 1
+    path: Assets/Scenes/Game/LayerPanel.unity
+    guid: 61d874c5eb2598d4fa7dfec89b1ab46d
+  - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: c850ee8c3b14cc8459e7e186857cf567
   m_configObjects:

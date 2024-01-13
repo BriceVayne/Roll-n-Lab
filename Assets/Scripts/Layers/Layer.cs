@@ -1,9 +1,10 @@
 using Maze;
+using Service;
 using UnityEngine;
 
 namespace Layers
 {
-    public class Layer : MonoBehaviour
+    internal sealed class Layer : MonoBehaviour
     {
         [SerializeField] private LayerItem m_Prefab;
         private LayerItem[,] m_Items;
@@ -23,13 +24,13 @@ namespace Layers
 
         private void Awake()
         {
-            m_Items = new LayerItem[GridManager.Instance.MazeSize.x, GridManager.Instance.MazeSize.y];
+            m_Items = new LayerItem[GridService.Instance.MazeSize.x, GridService.Instance.MazeSize.y];
         }
 
         private void Start()
         {
-            GridManager.Instance.OnCellCreated += OnCellCreate;
-            GridManager.Instance.OnCellUpdated += OnCellUpdate;
+            GridService.Instance.OnCellCreated += OnCellCreate;
+            GridService.Instance.OnCellUpdated += OnCellUpdate;
         }
     }
 }
