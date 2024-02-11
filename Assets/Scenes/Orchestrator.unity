@@ -152,24 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f1099dd4a3a5c44c95f903c72341356, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Scenes:
-  - Name: Services
-    SceneOrder: 0
-    Scenes:
-    - {fileID: 102900000, guid: 4a55eec06f1ca324f9386529050c7bcc, type: 3}
-    - {fileID: 102900000, guid: aabeb056dd630bc449cc5942b3f73486, type: 3}
-    - {fileID: 102900000, guid: 47f5e7411c82af946b78662b0907f077, type: 3}
-    - {fileID: 102900000, guid: 92a4d478fb34d6e4cb385e03881a8c47, type: 3}
-  - Name: Menu
-    SceneOrder: 1
-    Scenes: []
-  - Name: Game
-    SceneOrder: 2
-    Scenes:
-    - {fileID: 102900000, guid: 0be2ad17317625f4595bf65afb1eb675, type: 3}
-    - {fileID: 102900000, guid: c850ee8c3b14cc8459e7e186857cf567, type: 3}
-    - {fileID: 102900000, guid: 61d874c5eb2598d4fa7dfec89b1ab46d, type: 3}
-  m_SceneOrder: 000000000100000002000000
+  m_ScriptableData: {fileID: 11400000, guid: ddeb812db2e43c5458f5dc0d70a71376, type: 2}
 --- !u!4 &498334376
 Transform:
   m_ObjectHideFlags: 0

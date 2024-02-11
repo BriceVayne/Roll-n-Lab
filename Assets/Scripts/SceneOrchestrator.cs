@@ -11,8 +11,7 @@ namespace Orchestrator
         public Action<ESceneOrder> LoadScenes;
         public Action<ESceneOrder> UnloadScenes;
 
-        [SerializeField] private List<SOrchestrator> m_Scenes;
-        [SerializeField] private List<ESceneOrder> m_SceneOrder;
+        [SerializeField] private SceneOrchestratorObject m_ScriptableData;
 
         private void Awake()
         {
@@ -21,6 +20,8 @@ namespace Orchestrator
 
             LoadScenes += LoadSceneByOrder;
             UnloadScenes += UnloadSceneByOrder;
+
+            LoadScenes.Invoke(m_ScriptableData.StartScene);
         }
 
         private void LoadSceneByOrder(ESceneOrder _ESceneOrder)
@@ -31,7 +32,7 @@ namespace Orchestrator
 
         private void LoadOrUnloadScene(ESceneOrder _ESceneOrder, bool _ShouldLoad = true)
         {
-            var scenes = m_Scenes.Find(i => i.SceneOrder == _ESceneOrder);
+            var scenes = m_ScriptableData.Scenes.Find(i => i.SceneOrder == _ESceneOrder);
             foreach (var scene in scenes.Scenes)
             {
                 if (_ShouldLoad)
@@ -40,5 +41,12 @@ namespace Orchestrator
                     SceneManager.UnloadSceneAsync(scene.name);
             }
         }
+    }
+
+    [CreateAssetMenu]
+    internal sealed class SceneOrchestratorObject : ScriptableObject
+    {
+        public List<SOrchestrator> Scenes;
+        public ESceneOrder StartScene;
     }
 }
