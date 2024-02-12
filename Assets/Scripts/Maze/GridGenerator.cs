@@ -48,6 +48,8 @@ namespace Maze
 
         private void GenerateGrid()
         {
+            LoadingService.Instance.TryAddTask("Generate Grid", m_Maze.GetLength(0) * m_Maze.GetLength(1));
+
 #if UNITY_EDITOR
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -73,6 +75,8 @@ namespace Maze
                         m_Walls.Add(m_Maze[x, y]);
                     else if (value >= 0)
                         m_CellBlocks.Add(new List<CellModel>() { m_Maze[x, y] });
+
+                    LoadingService.Instance.UpdateTask.Invoke("Generate Grid", x * y);
                 }
             }
 
@@ -80,6 +84,8 @@ namespace Maze
             stopwatch.Stop();
             Debug.Log($"Generation time: {stopwatch.ElapsedMilliseconds} miliseconds");
 #endif
+
+            LoadingService.Instance.CompletedTask.Invoke("Generate Grid");
         }
 
         private void DeterminePath()
@@ -106,10 +112,11 @@ namespace Maze
             bool wasHorizontal = false;
             int nbWallToBreak = 10; //TODO: define a better number
             int wallBreak = 0;
-#if UNITY_EDITOR
             int changedCount = 0;
-#endif
+
             iterations.Add(m_Maze.Copy());
+
+            LoadingService.Instance.TryAddTask("Resolved Maze", m_Walls.Count + nbWallToBreak + minimalPath.Count);
 
 #if UNITY_EDITOR
             Stopwatch stopwatch = new Stopwatch();
@@ -211,14 +218,15 @@ namespace Maze
                         if (changedCount % percentage == 0)
                             iterations.Add(m_Maze.Copy());
                     }
-#if UNITY_EDITOR
+
                     changedCount++;
-#endif
                 }
 #if UNITY_EDITOR
                 stopwatchIt.Stop();
                 Debug.Log($"Iteration {changedCount} time: {stopwatchIt.ElapsedMilliseconds} miliseconds");
 #endif
+
+                LoadingService.Instance.UpdateTask.Invoke("Resolved Maze", changedCount);
             }
 #if UNITY_EDITOR
             Debug.Log($"Walls : {m_Walls.Count}");
@@ -239,6 +247,8 @@ namespace Maze
                     m_Walls.RemoveAt(index);
 
                     wallBreak++;
+
+                    LoadingService.Instance.UpdateTask.Invoke("Resolved Maze", changedCount + wallBreak);
                 }
             }
 
@@ -253,6 +263,8 @@ namespace Maze
                     minimalPath.ElementAt(i).Type = ECellType.PATH;
 
                 minimalPath.ElementAt(i).Value = 0;
+
+                LoadingService.Instance.UpdateTask.Invoke("Resolved Maze", changedCount + wallBreak + i);
             }
 
 #if UNITY_EDITOR
@@ -263,6 +275,8 @@ namespace Maze
             iterations.Add(m_Maze.Copy());
 
             GridService.Instance.SnapShots = iterations;
+
+            LoadingService.Instance.CompletedTask.Invoke("Resolved Maze");
         }
 
         private bool IsNotResolved()
