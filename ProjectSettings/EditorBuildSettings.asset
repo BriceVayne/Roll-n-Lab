@@ -35,9 +35,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Loading.unity
     guid: c4bfb1d34ed9ded4e8606e2d815ba3de
-  - enabled: 1
-    path: Assets/Scenes/Services/LoadingService.unity
-    guid: eb30e11345b991143a4a05a852e1641a
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 350296fe2f1ec3a47a3d234f43253a75,
       type: 2}

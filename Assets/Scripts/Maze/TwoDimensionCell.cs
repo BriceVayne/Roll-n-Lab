@@ -87,7 +87,7 @@ namespace Maze
 
         private void UpdateValue()
         {
-            m_Sprite.color = CellColorGenerator.GetColor(m_InternalValue);
+            m_Sprite.color = ColorGenerator.GetColor(m_InternalValue);
             m_ValueText.text = m_InternalValue.ToString();
         }
 
@@ -102,7 +102,7 @@ namespace Maze
 
         private void HideInfo()
         {
-            m_Sprite.color = CellColorGenerator.GetColorByType(m_InternalType);
+            m_Sprite.color = ColorGenerator.GetColorByType(m_InternalType);
             m_ValueText.text = string.Empty;
             m_TypeText.text = string.Empty;
         }

@@ -1272,19 +1272,6 @@ MonoBehaviour:
         m_MethodName: LoadSceneSingle
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 102900000, guid: eb30e11345b991143a4a05a852e1641a,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEditor.SceneAsset, UnityEditor.CoreModule
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
-      - m_Target: {fileID: 878183796}
-        m_TargetAssemblyTypeName: Reborn.Menu.SceneLoader, Assembly-CSharp
-        m_MethodName: LoadSceneAdditive
-        m_Mode: 2
-        m_Arguments:
           m_ObjectArgument: {fileID: 102900000, guid: c4bfb1d34ed9ded4e8606e2d815ba3de,
             type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEditor.SceneAsset, UnityEditor.CoreModule

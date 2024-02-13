@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Maze
 {
-    public static class CellColorGenerator
+    public static class ColorGenerator
     {
         private static Dictionary<int, Color> m_CellColor;
 
