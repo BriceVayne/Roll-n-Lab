@@ -5,21 +5,21 @@ using UnityEngine.SceneManagement;
 
 namespace Reborn.Menu
 {
-    internal class SceneLoader : Singleton<SceneLoader>
+    internal class SceneLoaderService : Singleton<SceneLoaderService>
     {
-        public static void LoadSceneSingle(SceneAsset sceneAsset)
+        public void LoadSceneSingle(SceneAsset sceneAsset)
         {
             if (sceneAsset != null)
                 LoadScene(sceneAsset.name, LoadSceneMode.Single);
         }
 
-        public static void LoadSceneAdditive(SceneAsset sceneAsset)
+        public void LoadSceneAdditive(SceneAsset sceneAsset)
         {
             if (sceneAsset != null)
                 LoadScene(sceneAsset.name, LoadSceneMode.Additive);
         }
 
-        public static void ExitGame()
+        public void ExitGame()
         {
             if (Application.isPlaying)
             {
@@ -28,10 +28,13 @@ namespace Reborn.Menu
             }
         }
 
-        private static void LoadScene(string sceneName, LoadSceneMode loadSceneMode)
+        private void LoadScene(string sceneName, LoadSceneMode loadSceneMode)
         {
             if (!string.IsNullOrEmpty(sceneName))
+            {
                 SceneManager.LoadScene(sceneName, loadSceneMode);
+                Debug.Log($"Scene {sceneName} [LOADED] [{loadSceneMode}]");
+            }
         }
     }
 }

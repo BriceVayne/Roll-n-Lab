@@ -16,7 +16,6 @@ namespace Reborn.Generator
         private List<CellModel> m_Walls;
         private List<List<CellModel>> m_CellBlocks;
         private HashSet<CellModel> m_MinimalPath;
-        private List<CellModel[,]> m_Iterations;
 
         private int m_Number;
         private int m_NbWallToBreak = 10; //TODO: define a better number
@@ -26,11 +25,9 @@ namespace Reborn.Generator
         {
             m_Stopwatch = new StopWatch();
             m_MazeSize = _MazeSize;
-
-            Regenerate();
         }
 
-        public void Regenerate()
+        public Queue<CellModel[,]> Regenerate()
         {
             m_Stopwatch.Reset();
             m_Stopwatch.Start();
@@ -38,9 +35,12 @@ namespace Reborn.Generator
             ResetData();
             GenerateGrid();
             DeterminePath();
-            ResolvedMaze();
+
+            Queue<CellModel[,]> iterations = ResolvedMaze();
 
             m_Stopwatch.Stop();
+
+            return iterations;
         }
 
         private void ResetData()
@@ -50,7 +50,8 @@ namespace Reborn.Generator
             m_Maze = new CellModel[m_MazeSize.x, m_MazeSize.y];
             m_Walls = new List<CellModel>();
             m_CellBlocks = new List<List<CellModel>>();
-            m_Iterations = new List<CellModel[,]>();
+            m_MinimalPath = new HashSet<CellModel>();
+
             m_Number = 1;
             m_ChangedCount = 0;
 
@@ -132,17 +133,18 @@ namespace Reborn.Generator
             m_Stopwatch.StopFromMethod();
         }
 
-        private void ResolvedMaze()
+        private Queue<CellModel[,]> ResolvedMaze()
         {
             m_Stopwatch.StartFromMethod();
 
             HashSet<CellModel> minimalPath = m_MinimalPath;
+            Queue<CellModel[,]> iterations = new Queue<CellModel[,]>();
 
             bool wasHorizontal = false;
             int wallBreak = 0;
 
             /// Add first iteration
-            m_Iterations.Add(m_Maze.Copy());
+            iterations.Enqueue(m_Maze.Copy());
 
             /// Resolved the main path
             while (IsNotResolved())
@@ -232,7 +234,7 @@ namespace Reborn.Generator
 
                     m_Walls.Remove(c);
 
-                    m_Iterations.Add(m_Maze.Copy());
+                    iterations.Enqueue(m_Maze.Copy());
 
                     m_ChangedCount++;
                 }
@@ -257,8 +259,10 @@ namespace Reborn.Generator
                 }
             }
 
-            m_Iterations.Add(m_Maze.Copy());
+            iterations.Enqueue(m_Maze.Copy());
             m_Stopwatch.StopFromMethod();
+
+            return iterations;
         }
 
         private bool IsNotResolved()

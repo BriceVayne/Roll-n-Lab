@@ -19,7 +19,7 @@ namespace Reborn.Maze
     /// <summary>
     /// The cell type list
     /// </summary>
-    internal enum ECellType
+    public enum ECellType
     {
         BORDER,
         WALL,
