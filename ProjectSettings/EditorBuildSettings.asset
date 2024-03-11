@@ -6,38 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Services/GameService.unity
-    guid: 4a55eec06f1ca324f9386529050c7bcc
-  - enabled: 1
-    path: Assets/Scenes/Services/GridService.unity
-    guid: 47f5e7411c82af946b78662b0907f077
-  - enabled: 1
-    path: Assets/Scenes/Services/LayerService.unity
-    guid: 92a4d478fb34d6e4cb385e03881a8c47
-  - enabled: 1
-    path: Assets/Scenes/Services/LevelService.unity
-    guid: aabeb056dd630bc449cc5942b3f73486
-  - enabled: 1
-    path: Assets/Scenes/Game/GridGenerator.unity
-    guid: 0be2ad17317625f4595bf65afb1eb675
-  - enabled: 1
-    path: Assets/Scenes/Game/LayerPanel.unity
-    guid: 61d874c5eb2598d4fa7dfec89b1ab46d
-  - enabled: 1
-    path: Assets/Scenes/Level.unity
-    guid: c850ee8c3b14cc8459e7e186857cf567
-  - enabled: 1
-    path: Assets/Scenes/Menu/Options.unity
-    guid: 685d3c5ccab777148a6d85ae005a47f8
-  - enabled: 1
-    path: Assets/Scenes/Game/SoloGame.unity
-    guid: 19a36194fa99a10419ef1abfa1fe1bbe
-  - enabled: 1
-    path: Assets/Scenes/Loading.unity
-    guid: c4bfb1d34ed9ded4e8606e2d815ba3de
+    path: Assets/Scenes/Menu/MainMenu.unity
+    guid: d43e77db861f2424d831bcd13dee51e3
   m_configObjects:
-    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 350296fe2f1ec3a47a3d234f43253a75,
-      type: 2}
-    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000,
-      guid: 4e6b2d2e42dcffb47849956740d2be2b, type: 2}
+    com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: b346940b1164179489e884266f88e66c, type: 2}
+    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: b2679b0d0645c294881ff962125d0251, type: 2}
+    com.unity.adaptiveperformance.samsung.android.provider_settings: {fileID: 11400000, guid: be54d5bc245103649afa41c1405ca9d8, type: 2}
+    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 8c4cf2c591c3e444c8822b8d6f421837, type: 2}
   m_UseUCBPForAssetBundles: 0
