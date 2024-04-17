@@ -1,4 +1,11 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI%20Toolkit/USS/MenyStyleSheet.uss?fileID=7433441132597879392&amp;guid=38b5e03e76d5ed84fa08b9c96d0121a4&amp;type=3#MenyStyleSheet" />
-    <ui:VisualElement />
+    <ui:VisualElement name="Root" style="flex-grow: 1;">
+        <ui:Label text="Maze 99" enable-rich-text="false" name="Title" style="align-self: center; justify-content: space-around; font-size: 200px; -unity-text-align: middle-center; -unity-font-style: bold; flex-grow: 1; color: rgb(255, 255, 255); -unity-text-outline-width: 5px; -unity-text-outline-color: rgb(0, 0, 0); transform-origin: center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+        <ui:VisualElement name="ButtonContainer" style="flex-grow: 1; align-self: stretch; align-items: center; justify-content: space-around;">
+            <ui:Button text="Button" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px; width: 50%; height: 20%;" />
+            <ui:Button text="Button" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px; width: 50%; height: 20%;" />
+            <ui:Button text="Button" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px; width: 50%; height: 20%;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
 </ui:UXML>
