@@ -1,4 +1,4 @@
-using Framework;
+using Game.Framework;
 using Generator;
 using Maze;
 using System.Collections;
@@ -7,6 +7,11 @@ using UnityEngine;
 
 namespace Menu
 {
+    internal sealed class CellView
+    {
+
+    }
+
     internal sealed class BackgroundAnimation : MonoBehaviour
     {
         [SerializeField][Range(1, 10)] private int m_SizeMultiplier;
@@ -110,23 +115,23 @@ namespace Menu
 
             m_Grid = new CellView[m_Size.x, m_Size.y];
 
-            for (int x = 0; x < m_Size.x; x++)
-                for (int y = 0; y < m_Size.y; y++)
-                {
-                    var cell = Instantiate(m_Prefab, m_Content);
-                    cell.name = $"Cell [{x},{y}]";
-                    cell.transform.position = new Vector3(x, y, 0);
-                    m_Grid[x, y] = cell;
-                }
+            //for (int x = 0; x < m_Size.x; x++)
+            //    for (int y = 0; y < m_Size.y; y++)
+            //    {
+            //        var cell = Instantiate(m_Prefab, m_Content);
+            //        cell.name = $"Cell [{x},{y}]";
+            //        cell.transform.position = new Vector3(x, y, 0);
+            //        m_Grid[x, y] = cell;
+            //    }
 
             m_StopWatch.StopFromMethod();
         }
 
         private void UpdateGrid(CellModel[,] _Iteration)
         {
-            for (int x = 0; x < m_Size.x; x++)
-                for (int y = 0; y < m_Size.y; y++)
-                    m_Grid[x, y].SetColor(_Iteration[x, y].Value, m_SpeedInSeconds);
+            //for (int x = 0; x < m_Size.x; x++)
+            //    for (int y = 0; y < m_Size.y; y++)
+            //        m_Grid[x, y].SetColor(_Iteration[x, y].Value, m_SpeedInSeconds);
         }
 
         private IEnumerator LoadNextIteration()

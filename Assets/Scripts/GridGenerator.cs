@@ -1,4 +1,4 @@
-using Framework;
+using Game.Framework;
 using Maze;
 using System;
 using System.Collections.Generic;

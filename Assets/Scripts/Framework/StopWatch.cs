@@ -1,28 +1,17 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
-
-namespace Framework
+namespace Game.Framework
 {
-    public struct SStopwatchOther
-    {
-        public long Milliseconds;
-        public long Ticks;
-        public TimeSpan Time;
-    }
-
-    public class StopWatch
+    internal sealed class StopWatch
     {
         private Stopwatch m_Global;
         private Dictionary<string, Stopwatch> m_Others;
-        private SStopwatchOther m_TotalOthers;
 
         public StopWatch()
         {
             m_Global = new Stopwatch();
-            m_TotalOthers = new SStopwatchOther();
             m_Others = new Dictionary<string, Stopwatch>();
         }
 
@@ -53,10 +42,6 @@ namespace Framework
                 return;
 
             m_Others[methodName].Stop();
-
-            m_TotalOthers.Milliseconds += m_Others[methodName].ElapsedMilliseconds;
-            m_TotalOthers.Ticks += m_Others[methodName].ElapsedTicks;
-            m_TotalOthers.Time += m_Others[methodName].Elapsed;
         }
 
         public void ResetFromMethod([CallerMemberName] string methodName = null)
@@ -64,18 +49,13 @@ namespace Framework
             if (string.IsNullOrEmpty(methodName) || !m_Others.ContainsKey(methodName))
                 return;
 
-            m_TotalOthers.Milliseconds -= m_Others[methodName].ElapsedMilliseconds;
-            m_TotalOthers.Ticks -= m_Others[methodName].ElapsedTicks;
-            m_TotalOthers.Time -= m_Others[methodName].Elapsed;
-
             m_Others[methodName].Reset();
-
         }
 
         public void Clear()
         {
+            m_Global.Reset();
             m_Others.Clear();
-            m_TotalOthers = new SStopwatchOther();
         }
     }
 }
