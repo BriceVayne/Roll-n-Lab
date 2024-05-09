@@ -143,7 +143,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Screenshot_20240417_133413_com.easybrain.block.puzzle.games_0: 7351232683577184549
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

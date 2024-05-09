@@ -31,32 +31,11 @@ namespace Maze
 
     internal sealed class CellModel
     {
-        /// <summary>
-        /// Internal cell value
-        /// </summary>
         public int Value { get; private set; }
-
-        /// <summary>
-        /// Internal cell position
-        /// </summary>
         public Vector2Int Position { get; private set; }
-
-        /// <summary>
-        /// Internal cell type
-        /// </summary>
         public ECellType Type { get; private set; }
-
-        /// <summary>
-        /// Internal cell offset
-        /// </summary>
         public float ZOffset { get; private set; }
 
-        /// <summary>
-        /// Create cell data with a value and position
-        /// </summary>
-        /// <param name="Value">Internal cell value</param>
-        /// <param name="Position">Internal cell position</param>
-        /// <param name="ZOffset">Internal cell offset</param>
         public CellModel(int _Value, Vector2Int _Position, ECellType _Type, float _ZOffset = 0f)
         {
             Value = _Value;
@@ -65,10 +44,6 @@ namespace Maze
             ZOffset = _ZOffset;
         }
 
-        /// <summary>
-        /// Copy cell data
-        /// </summary>
-        /// <param name="Model">Original cell to copy</param>
         public CellModel(CellModel _Model)
         {
             Value = _Model.Value;
@@ -83,10 +58,6 @@ namespace Maze
         public void SetType(ECellType _Type)
             => Type = _Type;
 
-        /// <summary>
-        /// Convert position and offset into Verctor3
-        /// </summary>
-        /// <returns></returns>
         public Vector3 ToVector3()
             => new Vector3(Position.x, Position.y, ZOffset);
 
