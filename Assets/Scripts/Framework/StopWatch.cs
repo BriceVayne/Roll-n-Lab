@@ -52,6 +52,15 @@ namespace Game.Framework
             m_Others[methodName].Reset();
         }
 
+        public string GetTimeFromMethod([CallerMemberName] string methodName = null)
+        {
+            if (string.IsNullOrEmpty(methodName) || !m_Others.ContainsKey(methodName))
+                return null;
+
+            string format = "{0,-32} | {1,-10} | {2,-5}";
+            return string.Format(format, methodName, m_Others[methodName].ElapsedTicks, m_Others[methodName].ElapsedMilliseconds);
+        }
+
         public void Clear()
         {
             m_Global.Reset();
